@@ -21,5 +21,18 @@
                 }
             }
         }
+
+        public bool[,] GetCurrentGeneration()
+        {
+            bool[,] generation = new bool[_cols, _rows];
+            for (int x = 0; x < _cols; x++)
+            {
+                for (int y = 0; y < _rows; y++)
+                {
+                    generation[x, y] = _universe[x, y];
+                }
+            }
+            return generation;
+        }
     }
 }
