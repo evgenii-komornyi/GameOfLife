@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using GameOfLifeEngine;
+
+GameEngine gameEngine = new GameEngine(20, 20, 2);
+
+
