@@ -7,7 +7,7 @@
     /// </summary>
     public class GameEngine
     {
-        private bool[,] _universe;
+        private bool[,] _field;
         private readonly int _rows;
         private readonly int _cols;
 
@@ -22,14 +22,14 @@
         {
             _rows = rows;
             _cols = cols;
-            _universe = new bool[rows, cols];
+            _field = new bool[rows, cols];
 
             Random random = new Random();
             for (int x = 0; x < cols; x++)
             {
                 for (int y = 0; y < rows; y++)
                 {
-                    _universe[x, y] = random.Next(density) == 0;
+                    _field[x, y] = random.Next(density) == 0;
                 }
             }
         }
@@ -72,7 +72,7 @@
         /// <returns>A boolean.</returns>
         private bool _HasLife(int col, int row)
         {
-            return _universe[col, row];
+            return _field[col, row];
         }
 
         /// <summary>
@@ -103,7 +103,7 @@
         /// </summary>
         public void NextGeneration()
         {
-            var newUniverse = new bool[_cols, _rows];
+            var newField = new bool[_cols, _rows];
             
             for (int x = 0; x < _cols; x++)
             {
@@ -114,17 +114,17 @@
 
                     if (!hasLife && neighboursCount == 3)
                     {
-                        newUniverse[x, y] = true;
+                        newField[x, y] = true;
                     } else if (hasLife && (neighboursCount < 2 || neighboursCount > 3))
                     {
-                        newUniverse[x, y] = false;
+                        newField[x, y] = false;
                     } else
                     {
-                        newUniverse[x, y] = _universe[x, y];
+                        newField[x, y] = _field[x, y];
                     }
                 }
             }
-            _universe = newUniverse;
+            _field = newField;
             Thread.Sleep(1000);
         }
 
@@ -139,7 +139,7 @@
             {
                 for (int y = 0; y < _rows; y++)
                 {
-                    generation[x, y] = _universe[x, y];
+                    generation[x, y] = _field[x, y];
                 }
             }
             return generation;

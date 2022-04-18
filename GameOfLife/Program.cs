@@ -2,9 +2,11 @@
 
 Console.CursorVisible = false;
 
-GameEngine gameEngine = new GameEngine(20, 20, 2);
+GameEngine gameEngine = new GameEngine(60, 60, 2);
 
-while (gameEngine.CountAliveCells() > 0)
+Console.SetCursorPosition(0, 20);
+
+while (!Console.KeyAvailable)
 {
     var currentGeneration = gameEngine.GetCurrentGeneration();
 
@@ -25,7 +27,7 @@ while (gameEngine.CountAliveCells() > 0)
         }
         Console.WriteLine(str);
     }
-    Console.SetCursorPosition(0, 0);
+    Console.SetCursorPosition(0, 20);
     gameEngine.NextGeneration();
 }
 Thread.Sleep(1000);
