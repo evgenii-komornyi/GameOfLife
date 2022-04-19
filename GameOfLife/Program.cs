@@ -2,7 +2,7 @@
 
 Console.CursorVisible = false;
 
-GameEngine gameEngine = new GameEngine(60, 60, 2);
+GameEngine gameEngine = new GameEngine(60, 100, 2);
 
 Console.SetCursorPosition(0, 20);
 

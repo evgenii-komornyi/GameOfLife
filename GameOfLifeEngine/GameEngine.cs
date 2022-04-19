@@ -22,7 +22,7 @@
         {
             _rows = rows;
             _cols = cols;
-            _field = new bool[rows, cols];
+            _field = new bool[cols, rows];
 
             Random random = new Random();
             for (int x = 0; x < cols; x++)
