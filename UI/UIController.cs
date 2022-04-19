@@ -1,10 +1,14 @@
-﻿using GameOfLifeEngine;
+﻿using FileController;
+using GameOfLifeEngine;
 
 namespace UI
 {
     public class UIController
     {
         private bool _isVisible = true;
+        private bool[,] _currentGeneration;
+        private RWController rwController = new RWController();
+
         public UIController()
         {
         }
@@ -42,12 +46,27 @@ namespace UI
                             _isVisible = !_isVisible;      
                             _settings(_isVisible);
                             break;
+                        case "4":
+                        case "save":
+                            if (_currentGeneration == null || _currentGeneration.Length == 0)
+                            {
+                                Console.WriteLine("You need to start new game before save file.");
+                                continue;
+                            }
+
+                            Console.Write("Enter file name: ");
+                            string fileName = Console.ReadLine();
+
+                            rwController.Write(_currentGeneration, fileName);
+                            Console.WriteLine("File saved.");
+                            break;
                         case "?":
                         case "help":
                             Console.WriteLine("(0), or exit - to exit from the program;");
                             Console.WriteLine("(1), or new - to start a new game;");
                             Console.WriteLine("(2), or clear - to clear console;");
                             Console.WriteLine("(3) - to show/hide cursor;");
+                            Console.WriteLine("(4), or save - to save current game;");
                             break;
                         default:
                             Console.WriteLine("This command isn't support. Please read help documentation. (For help type \"?\", or \"help\")");
@@ -124,6 +143,7 @@ namespace UI
             while (!Console.KeyAvailable)
             {
                 var currentGeneration = gameEngine.GetCurrentGeneration();
+                _currentGeneration = currentGeneration;
 
                 for (int y = 0; y < currentGeneration.GetLength(1); y++)
                 {

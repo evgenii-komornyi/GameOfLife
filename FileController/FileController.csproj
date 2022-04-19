@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FileController\FileController.csproj" />
-    <ProjectReference Include="..\GameOfLifeEngine\GameOfLifeEngine.csproj" />
-  </ItemGroup>
-
 </Project>
