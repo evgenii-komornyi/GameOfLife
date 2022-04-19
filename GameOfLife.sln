@@ -5,7 +5,15 @@ VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife", "GameOfLife\GameOfLife.csproj", "{C4700466-494C-4E5D-A8BE-61E06BDE87F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLifeEngine", "GameOfLifeEngine\GameOfLifeEngine.csproj", "{5E123980-9FD0-41CC-8790-4453CFB3EEC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLifeEngine", "GameOfLifeEngine\GameOfLifeEngine.csproj", "{5E123980-9FD0-41CC-8790-4453CFB3EEC4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{357A4CFF-42B3-488F-BC04-DC656874F0B7}"
+	ProjectSection(SolutionItems) = preProject
+		Greating.txt = Greating.txt
+		MainMenuCommands.txt = MainMenuCommands.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{62A749C2-AF1D-4112-8C8C-E2C54E93C785}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,10 @@ Global
 		{5E123980-9FD0-41CC-8790-4453CFB3EEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E123980-9FD0-41CC-8790-4453CFB3EEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E123980-9FD0-41CC-8790-4453CFB3EEC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62A749C2-AF1D-4112-8C8C-E2C54E93C785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62A749C2-AF1D-4112-8C8C-E2C54E93C785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62A749C2-AF1D-4112-8C8C-E2C54E93C785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62A749C2-AF1D-4112-8C8C-E2C54E93C785}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
