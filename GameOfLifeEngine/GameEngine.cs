@@ -18,7 +18,7 @@
         /// <param name="rows">Count of the rows.</param>
         /// <param name="cols">Count of the cols.</param>
         /// <param name="density">Count of density.</param>
-        public GameEngine(int rows, int cols, int density)
+        public GameEngine(int rows, int cols, int density = 2)
         {
             _rows = rows;
             _cols = cols;
