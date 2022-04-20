@@ -3,25 +3,34 @@ using GameOfLifeEngine;
 
 namespace UI
 {
+    /// <summary>
+    /// The class is contained all settings 
+    /// to start a game from UI.
+    /// </summary>
     public class UIController
     {
-        private bool _isVisible = true;
-        private bool[,] _currentGeneration;
-        private RWController rwController = new RWController();
-
-        public UIController()
-        {
-        }
-
+        private bool _isCursorVisible = true;
+        
+        /// <summary>
+        /// Method is cantained all methods 
+        /// that needed to start a game.
+        /// </summary>
         public void start()
         {
-            _greatings();
+            Greatings();
+            StartMenu();
+        }
 
+        /// <summary>
+        /// Simple menu to commmunicate with user.
+        /// </summary>
+        private void StartMenu()
+        {
             bool exitMainMenu = false;
 
             while (!exitMainMenu)
             {
-                _readMainMenuCommands();
+                ReadMainMenuCommands();
 
                 try
                 {
@@ -30,21 +39,21 @@ namespace UI
 
                     switch (commandForMainMenu)
                     {
-                        case "0": 
+                        case "0":
                         case "exit":
                             exitMainMenu = true;
                             break;
                         case "1":
                         case "new":
-                            _configureGame();
+                            ConfigureGame();
                             break;
                         case "2":
                         case "clear":
                             Console.Clear();
                             break;
                         case "3":
-                            _isVisible = !_isVisible;      
-                            _settings(_isVisible);
+                            _isCursorVisible = !_isCursorVisible;
+                            Settings(_isCursorVisible);
                             break;
                         case "4":
                         case "save":
@@ -80,16 +89,26 @@ namespace UI
             }
         }
 
-        private void _settings(bool isVisible)
+        /// <summary>
+        /// UI's settings.
+        /// </summary>
+        /// <param name="isCursorVisible">
+        /// Sets the visibility
+        /// of the cursor in the console.
+        /// </param>
+        private void Settings(bool isCursorVisible)
         {
-            Console.CursorVisible = isVisible;
+            Console.CursorVisible = isCursorVisible;
         }
 
-        private void _greatings()
+        /// <summary>
+        /// Method reads file with ASCII game's name.
+        /// </summary>
+        private void Greatings()
         {
             try
             {
-                Console.WriteLine(File.ReadAllText(@"C:\Users\evgenii.komornyi\source\repos\GameOfLife\Greating.txt"));
+                Console.WriteLine(File.ReadAllText(@"..\..\..\..\Greating.txt"));
             }
             catch (FileNotFoundException e)
             {
@@ -97,11 +116,14 @@ namespace UI
             }
         }
 
-        private void _readMainMenuCommands()
+        /// <summary>
+        /// Method reads file with main menu's commands.
+        /// </summary>
+        private void ReadMainMenuCommands()
         {
             try
             {
-                Console.WriteLine(File.ReadAllText(@"C:\Users\evgenii.komornyi\source\repos\GameOfLife\MainMenuCommands.txt"));
+                Console.WriteLine(File.ReadAllText(@"..\..\..\..\MainMenuCommands.txt"));
             }
             catch (FileNotFoundException e)
             {
@@ -109,7 +131,10 @@ namespace UI
             }
         }
 
-        private void _configureGame()
+        /// <summary>
+        /// Method configures a game, using user's input.
+        /// </summary>
+        private void ConfigureGame()
         {
             Console.WriteLine("Before you start a new game, you need to configurate it.");
 
@@ -128,7 +153,7 @@ namespace UI
                 }
 
                 GameEngine gameEngine = new GameEngine(rowsCount, colsCount);
-                _renderGame(gameEngine);
+                RenderGame(gameEngine);
             }
             catch (FormatException e)
             {
@@ -137,7 +162,11 @@ namespace UI
             }
         }
 
-        private void _renderGame(GameEngine gameEngine)
+        /// <summary>
+        /// Method draws field and cells on it, changing every second.
+        /// </summary>
+        /// <param name="gameEngine">Game's core.</param>
+        private void RenderGame(GameEngine gameEngine)
         {
             Console.SetCursorPosition(0, 20);
             while (!Console.KeyAvailable)
@@ -147,20 +176,20 @@ namespace UI
 
                 for (int y = 0; y < currentGeneration.GetLength(1); y++)
                 {
-                    var str = new char[currentGeneration.GetLength(0)];
+                    var aliveDeadSymbols = new char[currentGeneration.GetLength(0)];
 
                     for (int x = 0; x < currentGeneration.GetLength(0); x++)
                     {
                         if (currentGeneration[x, y])
                         {
-                            str[x] = '#';
+                            aliveDeadSymbols[x] = '#';
                         }
                         else
                         {
-                            str[x] = ' ';
+                            aliveDeadSymbols[x] = ' ';
                         }
                     }
-                    Console.WriteLine(str);
+                    Console.WriteLine(aliveDeadSymbols);
                 }
                 Console.SetCursorPosition(0, 20);
                 gameEngine.NextGeneration();

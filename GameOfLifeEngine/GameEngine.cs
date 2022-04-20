@@ -39,8 +39,8 @@
         /// </summary>
         /// <param name="x">Current col number.</param>
         /// <param name="y">Current row number.</param>
-        /// <returns>An integer.</returns>
-        private int _countNeighbours(int x, int y)
+        /// <returns>Neighbour count.</returns>
+        private int CountNeighbours(int x, int y)
         {
             int count = 0;
 
@@ -53,7 +53,7 @@
 
                     bool isSelfChecking = col == x && row == y;
 
-                    if (_HasLife(col, row) && !isSelfChecking)
+                    if (HasLife(col, row) && !isSelfChecking)
                     {
                         count++;
                     }
@@ -69,8 +69,8 @@
         /// </summary>
         /// <param name="col">Current col.</param>
         /// <param name="row">Current row.</param>
-        /// <returns>A boolean.</returns>
-        private bool _HasLife(int col, int row)
+        /// <returns>The existence of a living cell.</returns>
+        private bool HasLife(int col, int row)
         {
             return _field[col, row];
         }
@@ -79,7 +79,7 @@
         /// Method calculates the count
         /// of alive cells.
         /// </summary>
-        /// <returns>An integer.</returns>
+        /// <returns>Alive cells count.</returns>
         public int CountAliveCells()
         {
             int aliveCells = 0;
@@ -88,7 +88,7 @@
             {
                 for (int y = 0; y < _rows; y++)
                 {
-                    if (_HasLife(x, y))
+                    if (HasLife(x, y))
                     {
                         aliveCells++;
                     }
@@ -109,8 +109,8 @@
             {
                 for (int y = 0; y < _rows; y++)
                 {
-                    var neighboursCount = _countNeighbours(x, y);
-                    var hasLife = _HasLife(x, y);
+                    var neighboursCount = CountNeighbours(x, y);
+                    var hasLife = HasLife(x, y);
 
                     if (!hasLife && neighboursCount == 3)
                     {
@@ -131,7 +131,7 @@
         /// <summary>
         /// Method calculates current generation.
         /// </summary>
-        /// <returns>2D boolean array.</returns>
+        /// <returns>Current generation.</returns>
         public bool[,] GetCurrentGeneration()
         {
             bool[,] generation = new bool[_cols, _rows];
