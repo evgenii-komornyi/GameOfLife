@@ -10,7 +10,9 @@ namespace UI
     public class UIController
     {
         private bool _isCursorVisible = true;
-        
+        private bool[,] _currentGeneration;
+        private RWController rwController = new RWController();
+
         /// <summary>
         /// Method is cantained all methods 
         /// that needed to start a game.
