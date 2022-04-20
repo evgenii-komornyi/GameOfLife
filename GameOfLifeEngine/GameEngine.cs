@@ -10,6 +10,7 @@
         private bool[,] _field;
         private readonly int _rows;
         private readonly int _cols;
+        private readonly int _density = 2;
 
         /// <summary>
         /// Constructor creates based-on user input universe
@@ -18,22 +19,29 @@
         /// <param name="rows">Count of the rows.</param>
         /// <param name="cols">Count of the cols.</param>
         /// <param name="density">Count of density.</param>
-        public GameEngine(int rows, int cols, int density = 2)
+        public GameEngine(int rows, int cols)
         {
             _rows = rows;
             _cols = cols;
             _field = new bool[cols, rows];
+        }
 
+        public void Generate()
+        {
             Random random = new Random();
-            for (int x = 0; x < cols; x++)
+            for (int x = 0; x < _cols; x++)
             {
-                for (int y = 0; y < rows; y++)
+                for (int y = 0; y < _rows; y++)
                 {
-                    _field[x, y] = random.Next(density) == 0;
+                    _field[x, y] = random.Next(_density) == 0;
                 }
             }
         }
-
+        
+        public void LoadGame(bool[,] loadedGeneration)
+        {
+            _field = loadedGeneration;
+        }
         /// <summary>
         /// Method calculates how many neighbors are near current cell.
         /// </summary>

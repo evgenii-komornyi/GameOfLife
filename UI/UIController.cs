@@ -1,4 +1,4 @@
-﻿using FileController;
+﻿using Files;
 using GameOfLifeEngine;
 
 namespace UI
@@ -11,7 +11,7 @@ namespace UI
     {
         private bool _isCursorVisible = true;
         private bool[,] _currentGeneration;
-        private RWController rwController = new RWController();
+        private FileController _fileController = new FileController();
 
         /// <summary>
         /// Method is cantained all methods 
@@ -69,8 +69,18 @@ namespace UI
                             string fileName = Console.ReadLine();
                             fileName = fileName == null || fileName.Equals("") ? "default" : fileName;
 
-                            rwController.Write(_currentGeneration, fileName);
-                            Console.WriteLine($"File saved into {fileName}.txt");
+                            _fileController.Write(_currentGeneration, fileName);
+                            Console.WriteLine($"File saved into {fileName}.gof");
+                            break;
+                        case "5":
+                        case "load":
+                            _fileController.GetDirectoryFiles();
+                            Console.WriteLine("Loading the game from file.");
+                            var loadedGame = _fileController.Read("25x25");
+
+                            _currentGeneration = loadedGame.loadedGeneration;
+                            RenderGame(loadedGame.loadedGame);
+
                             break;
                         case "?":
                         case "help":
@@ -79,6 +89,7 @@ namespace UI
                             Console.WriteLine("(2), or clear - to clear console;");
                             Console.WriteLine("(3) - to show/hide cursor;");
                             Console.WriteLine("(4), or save - to save current game;");
+                            Console.WriteLine("(5), or load - to load saved game;");
                             break;
                         default:
                             Console.WriteLine("This command isn't support. Please read help documentation. (For help type \"?\", or \"help\")");
@@ -156,6 +167,7 @@ namespace UI
                 }
 
                 GameEngine gameEngine = new GameEngine(rowsCount, colsCount);
+                gameEngine.Generate();
                 RenderGame(gameEngine);
             }
             catch (FormatException e)
@@ -197,7 +209,7 @@ namespace UI
                 Console.SetCursorPosition(0, 20);
                 gameEngine.NextGeneration();
             }
-            Thread.Sleep(1000);
+            Thread.Sleep(10000);
             Console.Clear();
         }
     }
