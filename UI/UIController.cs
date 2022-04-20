@@ -67,9 +67,10 @@ namespace UI
 
                             Console.Write("Enter file name: ");
                             string fileName = Console.ReadLine();
+                            fileName = fileName == null || fileName.Equals("") ? "default" : fileName;
 
                             rwController.Write(_currentGeneration, fileName);
-                            Console.WriteLine("File saved.");
+                            Console.WriteLine($"File saved into {fileName}.txt");
                             break;
                         case "?":
                         case "help":

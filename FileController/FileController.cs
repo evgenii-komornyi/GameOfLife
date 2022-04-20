@@ -2,13 +2,10 @@
 {
     public class RWController
     {
-        public RWController()
+        public void Write(bool[,] arrayToWrite, string fileName)
         {
-        }
-
-        public void Write(bool[,] arrayToWrite, string fileName = "default")
-        {
-            StreamWriter streamWriter = new StreamWriter(@"C:\Users\evgenii.komornyi\source\repos\GameOfLife\" + fileName + ".txt");
+            fileName = fileName.Trim();
+            StreamWriter streamWriter = new StreamWriter(@"../../../../" + fileName + ".txt");
 
             string output = "";
 
@@ -16,7 +13,7 @@
             {
                 for (int y = 0; y < arrayToWrite.GetLength(1); y++)
                 {
-                    output += arrayToWrite[x, y].ToString();
+                    output += arrayToWrite[x, y] + " ";
                 }
                 streamWriter.WriteLine(output);
                 output = "";
