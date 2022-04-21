@@ -2,8 +2,16 @@
 
 namespace Files
 {
+    /// <summary>
+    /// Class to saving and loading games' files,
+    /// and getting files within directory.
+    /// </summary>
     public class FileController
     {
+        /// <summary>
+        /// Method reads files within /games directory
+        /// and show list of files.
+        /// </summary>
         public void GetDirectoryFiles()
         {
             DirectoryInfo directoryInfo = new DirectoryInfo(@"../../../../games");
@@ -18,12 +26,22 @@ namespace Files
             {
                 Console.WriteLine("Before load a game, you need to start a new game and save it.");
             }
+
             for (int i = 0; i < files.Length; i++)
             {
                 Console.WriteLine($"{ i+1 }. {files[i].Name}");
             }
         }
 
+        /// <summary>
+        /// Method saves data to the specific file.
+        /// </summary>
+        /// <param name="arrayToWrite">
+        /// Data to write.
+        /// </param>
+        /// <param name="fileName">
+        /// File name to write the data.
+        /// </param>
         public void Write(bool[,] arrayToWrite, string fileName)
         {
             fileName = fileName.Trim();
@@ -43,6 +61,13 @@ namespace Files
             streamWriter.Close();
         }
 
+        /// <summary>
+        /// Method reads file's content and loads it into field.
+        /// </summary>
+        /// <param name="fileName">
+        /// File name to read the data.
+        /// </param>
+        /// <returns>Tuple of created field and loaded positions.</returns>
         public (GameEngine loadedGame, bool[,] loadedGeneration) Read(string fileName)
         {
             String fileContent = File.ReadAllText(@"../../../../games/" + fileName + ".gof");
@@ -79,6 +104,13 @@ namespace Files
             return tuple;
         }
 
+        /// <summary>
+        /// Method generates field based on rows and cols in the file.
+        /// </summary>
+        /// <param name="fileContent">
+        /// File content from loading file.
+        /// </param>
+        /// <returns>Tuple of generated field, rows count and cols count.</returns>
         private (GameEngine loadedGame, int rowsCount, int colsCount) LoadGame(string fileContent)
         {
             string[] rows = fileContent.Split("\n");
