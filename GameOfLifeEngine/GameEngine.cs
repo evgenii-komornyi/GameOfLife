@@ -7,6 +7,7 @@
     /// </summary>
     public class GameEngine
     {
+        public uint CurrentGeneration { get; private set; }
         private bool[,] _field;
         private readonly int _rows;
         private readonly int _cols;
@@ -18,7 +19,6 @@
         /// </summary>
         /// <param name="rows">Count of the rows.</param>
         /// <param name="cols">Count of the cols.</param>
-        /// <param name="density">Count of density.</param>
         public GameEngine(int rows, int cols)
         {
             _rows = rows;
@@ -42,6 +42,7 @@
         {
             _field = loadedGeneration;
         }
+
         /// <summary>
         /// Method calculates how many neighbors are near current cell.
         /// </summary>
@@ -133,6 +134,7 @@
                 }
             }
             _field = newField;
+            CurrentGeneration++;
             Thread.Sleep(1000);
         }
 

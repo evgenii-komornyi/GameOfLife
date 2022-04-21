@@ -75,11 +75,18 @@ namespace UI
                         case "5":
                         case "load":
                             _fileController.GetDirectoryFiles();
-                            Console.WriteLine("Loading the game from file.");
-                            var loadedGame = _fileController.Read("25x25");
+                            Console.Write("Enter file name: ");
+                            string fileNameToLoad = Console.ReadLine();
 
-                            _currentGeneration = loadedGame.loadedGeneration;
-                            RenderGame(loadedGame.loadedGame);
+                            var loadedGame = _fileController.Read(fileNameToLoad);
+                            if (loadedGame.loadedGame == null && loadedGame.loadedGeneration == null)
+                            {
+                                Console.WriteLine("File is broken.");
+                            } else
+                            {
+                                _currentGeneration = loadedGame.loadedGeneration;
+                                RenderGame(loadedGame.loadedGame);
+                            }
 
                             break;
                         case "?":
@@ -188,6 +195,7 @@ namespace UI
             {
                 var currentGeneration = gameEngine.GetCurrentGeneration();
                 _currentGeneration = currentGeneration;
+                Console.Title = $"Current iteration: {gameEngine.CurrentGeneration.ToString()} - Alive cells: {gameEngine.CountAliveCells().ToString()}";
 
                 for (int y = 0; y < currentGeneration.GetLength(1); y++)
                 {
@@ -209,7 +217,7 @@ namespace UI
                 Console.SetCursorPosition(0, 20);
                 gameEngine.NextGeneration();
             }
-            Thread.Sleep(10000);
+            Thread.Sleep(1000);
             Console.Clear();
         }
     }
