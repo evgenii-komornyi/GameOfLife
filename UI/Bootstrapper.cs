@@ -3,7 +3,6 @@ using GameOfLifeEngine;
 
 namespace UI
 {
-
     /// <summary>
     /// Bootstrapper class, contained 
     /// settings for starting UI.
@@ -12,6 +11,7 @@ namespace UI
     {
         private bool _isCursorVisible = true;
         private bool[,] _currentGeneration;
+        private uint _currentIteration;
         private FileController _fileController;
 
         /// <summary>
@@ -166,6 +166,7 @@ namespace UI
 
                 GameEngine gameEngine = new GameEngine(rowsCount, colsCount);
                 gameEngine.Generate();
+                _currentIteration = 0;
                 RenderGame(gameEngine);
             }
             catch (FormatException e)
@@ -182,11 +183,16 @@ namespace UI
         {
             SetTitle("Saving game");
 
+            SavingObject objectToSave = new SavingObject();
+
             Console.Write("Enter file name: ");
             string fileName = Console.ReadLine();
             fileName = fileName == null || fileName.Equals("") ? "default" : fileName;
 
-            _fileController.Write(_currentGeneration, fileName);
+            objectToSave.CurrentGeneration = _currentGeneration;
+            objectToSave.CurrentIterationCount = _currentIteration;
+
+            _fileController.Write(objectToSave, fileName);
             Console.WriteLine($"File saved into {fileName}.gof");
         }
 
@@ -212,15 +218,16 @@ namespace UI
             Console.Write("Enter file name: ");
             string fileNameToLoad = Console.ReadLine();
 
-            var loadedGame = _fileController.Read(fileNameToLoad);
-            if (loadedGame.loadedGame == null && loadedGame.loadedGeneration == null)
+            LoadingObject loadedGame = _fileController.Read(fileNameToLoad);
+            if (loadedGame.GameCore == null && loadedGame.GenerationToLoad == null)
             {
                 Console.WriteLine("File is broken.");
             }
             else
             {
-                _currentGeneration = loadedGame.loadedGeneration;
-                RenderGame(loadedGame.loadedGame);
+                _currentGeneration = loadedGame.GenerationToLoad;
+                _currentIteration = loadedGame.CurrentIterationCount;
+                RenderGame(loadedGame.GameCore);
             }
         }
 
@@ -260,7 +267,9 @@ namespace UI
             {
                 var currentGeneration = gameEngine.GetCurrentGeneration();
                 _currentGeneration = currentGeneration;
-                SetTitle($"Current iteration: {gameEngine.CurrentGeneration.ToString()} - Alive cells: {gameEngine.CountAliveCells().ToString()}");
+                _currentIteration++;
+                
+                SetTitle($"Current iteration: {_currentIteration.ToString()} - Alive cells: {gameEngine.CountAliveCells().ToString()}");
 
                 for (int y = 0; y < _currentGeneration.GetLength(1); y++)
                 {

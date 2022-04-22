@@ -36,28 +36,29 @@ namespace Files
         /// <summary>
         /// Method saves data to the specific file.
         /// </summary>
-        /// <param name="arrayToWrite">
-        /// Data to write.
+        /// <param name="objectToSave">
+        /// Object contained data to save.
         /// </param>
         /// <param name="fileName">
         /// File name to write the data.
         /// </param>
-        public void Write(bool[,] arrayToWrite, string fileName)
+        public void Write(SavingObject objectToSave, string fileName)
         {
             fileName = fileName.Trim();
             StreamWriter streamWriter = new StreamWriter(@"../../../../games/" + fileName + ".gof");
 
             string output = "";
 
-            for (int y = 0; y < arrayToWrite.GetLength(1); y++)
+            for (int y = 0; y < objectToSave.CurrentGeneration.GetLength(1); y++)
             {
-                for (int x = 0; x < arrayToWrite.GetLength(0); x++)
+                for (int x = 0; x < objectToSave.CurrentGeneration.GetLength(0); x++)
                 {
-                    output += arrayToWrite[x, y] + " ";
+                    output += objectToSave.CurrentGeneration[x, y] + " ";
                 }
                 streamWriter.WriteLine(output);
                 output = "";
             }
+            streamWriter.Write(objectToSave.CurrentIterationCount);
             streamWriter.Close();
         }
 
@@ -67,24 +68,37 @@ namespace Files
         /// <param name="fileName">
         /// File name to read the data.
         /// </param>
-        /// <returns>Tuple of created field and loaded positions.</returns>
-        public (GameEngine loadedGame, bool[,] loadedGeneration) Read(string fileName)
+        /// <returns>
+        /// Object with created field, 
+        /// loaded positions and current iteration's count.
+        /// </returns>
+        public LoadingObject Read(string fileName)
         {
             String fileContent = File.ReadAllText(@"../../../../games/" + fileName + ".gof");
-            var loadedGame = LoadGame(fileContent);
+            LoadingObject objectToLoad = new LoadingObject();
 
-            if (loadedGame.loadedGame == null && loadedGame.rowsCount == 0 && loadedGame.colsCount == 0)
+            LoadingObject loadedGame = LoadGame(fileContent, objectToLoad);
+                       
+            if (loadedGame.GameCore == null && loadedGame.RowsCount == 0 && loadedGame.ColsCount == 0)
             {
-                return (loadedGame: null, loadedGeneration: null);
+                return loadedGame;
             }
 
-            bool[,] loadedGeneration = new bool[loadedGame.colsCount, loadedGame.rowsCount];
-
-            var tuple = (loadedGame: loadedGame.loadedGame, loadedGeneration: loadedGeneration);
+            bool[,] loadedGeneration = new bool[loadedGame.ColsCount, loadedGame.RowsCount];
 
             string[] rows = fileContent.Split("\n");
             string[] cols;
 
+            try
+            {
+                loadedGame.CurrentIterationCount = uint.Parse(rows[rows.Length - 1]);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("File is broken.");
+                Console.WriteLine($"Error: {e.Message}");
+            }
+            
             for (int y = 0; y < rows.Length - 1; y++)
             {
                 cols = rows[y].Trim().Split(' ');
@@ -98,10 +112,10 @@ namespace Files
                     }
                 }
             }
-            loadedGame.loadedGame.LoadGame(loadedGeneration);
-            tuple.loadedGeneration = loadedGeneration;
-
-            return tuple;
+            loadedGame.GameCore.LoadGame(loadedGeneration);
+            loadedGame.GenerationToLoad = loadedGeneration;
+            
+            return objectToLoad;
         }
 
         /// <summary>
@@ -110,8 +124,11 @@ namespace Files
         /// <param name="fileContent">
         /// File content from loading file.
         /// </param>
-        /// <returns>Tuple of generated field, rows count and cols count.</returns>
-        private (GameEngine loadedGame, int rowsCount, int colsCount) LoadGame(string fileContent)
+        /// <returns>
+        /// Object with generated field, 
+        /// rows count and cols count.
+        /// </returns>
+        private LoadingObject LoadGame(string fileContent, LoadingObject objectToLoad)
         {
             string[] rows = fileContent.Split("\n");
             string[] cols = null;
@@ -123,12 +140,18 @@ namespace Files
 
             if ((rows.Length < 20 || rows.Length > 50) && (cols.Length < 20 || cols.Length > 260))
             {
-                return (loadedGame: null, rowsCount: 0, colsCount: 0);
+                objectToLoad.GameCore = null;
+                objectToLoad.RowsCount = 0;
+                objectToLoad.ColsCount = 0;
             }
 
             GameEngine loadedGame = new GameEngine(rows.Length - 1, cols.Length);
 
-            return (loadedGame: loadedGame, rowsCount: rows.Length - 1, colsCount: cols.Length);
+            objectToLoad.GameCore = loadedGame;
+            objectToLoad.RowsCount = rows.Length - 1;
+            objectToLoad.ColsCount = cols.Length;
+
+            return objectToLoad;
         }
     }
 }
