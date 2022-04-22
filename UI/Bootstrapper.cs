@@ -12,7 +12,18 @@ namespace UI
     {
         private bool _isCursorVisible = true;
         private bool[,] _currentGeneration;
-        private FileController _fileController = new FileController();
+        private FileController _fileController;
+
+        /// <summary>
+        /// Constructor for Dependency Injjection.
+        /// </summary>
+        /// <param name="fileController">
+        /// File controller.
+        /// </param>
+        public Bootstrapper(FileController fileController)
+        {
+            this._fileController = fileController;
+        }
 
         /// <summary>
         /// Method shows the main menu.

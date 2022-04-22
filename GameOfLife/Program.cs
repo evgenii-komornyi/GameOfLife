@@ -1,4 +1,9 @@
-﻿using UI;
+﻿using Files;
+using UI;
 
-UIController ui = new UIController();
+FileController fileController = new FileController();
+
+Bootstrapper bootstrapper = new Bootstrapper(fileController);
+
+UIController ui = new UIController(bootstrapper);
 ui.start();
