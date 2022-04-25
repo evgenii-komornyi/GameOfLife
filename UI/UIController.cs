@@ -30,45 +30,46 @@ namespace UI
             while (!exitMainMenu)
             {
                 ReadMainMenuCommands();
+               
+                Console.Write(StringsDictionary.TypeCommand);
+                string commandForMainMenu = Console.ReadLine();
 
-                try
+                switch (commandForMainMenu)
                 {
-                    Console.Write("Type command: ");
-                    string commandForMainMenu = Console.ReadLine();
-
-                    switch (commandForMainMenu)
-                    {
-                        case "0":
-                        case "exit":
-                            exitMainMenu = true;
-                            break;
-                        case "1":
-                        case "new":
-                            ConfigureGame();
-                            break;
-                        case "2":
-                        case "clear":
-                            Console.Clear();
-                            break;
-                        case "3":
-                            _isCursorVisible = !_isCursorVisible;
-                            Settings(_isCursorVisible);
-                            break;
-                        case "?":
-                        case "help":
-                            Console.WriteLine("(0), or exit - to exit from the program;");
-                            Console.WriteLine("(1), or new - to start a new game;");
-                            Console.WriteLine("(2), or clear - to clear console;");
-                            Console.WriteLine("(3) - to show/hide cursor;");
-                            break;
-                        default:
-                            Console.WriteLine("This command isn't support. Please read help documentation. (For help type \"?\", or \"help\")");
-                            break;
-                    }
-                }
-                catch (IOException e)
-                {
-                    Console.WriteLine($"Error: {e.Message}");
+                    case StringsDictionary.ExitCommandNumber:
+                    case StringsDictionary.ExitCommandText:
+                        exitMainMenu = true;
+                        break;
+                    case StringsDictionary.NewGameCommandNumber:
+                    case StringsDictionary.NewGameCommandText:
+                        GameEngine newGame = ConfigureGame();
+                        if (newGame != null)
+                        {
+                            RenderGame(newGame);
+                        }
+                        else
+                        {
+                            Console.WriteLine(StringsDictionary.RenderNewGameError);
+                        }
+                        break;
+                    case StringsDictionary.ClearConsoleCommandNumber:
+                    case StringsDictionary.ClearConsoleCommandText:
+                        Console.Clear();
+                        break;
+                    case StringsDictionary.ShowHideCursorCommand:
+                        _isCursorVisible = !_isCursorVisible;
+                        Settings(_isCursorVisible);
+                        break;
+                    case StringsDictionary.HelpCommandSign:
+                    case StringsDictionary.HelpCommandText:
+                        Console.WriteLine(StringsDictionary.HelpDescriptionExit);
+                        Console.WriteLine(StringsDictionary.HelpDesctiptionNewGame);
+                        Console.WriteLine(StringsDictionary.HelpDesctiptionClearConsole);
+                        Console.WriteLine(StringsDictionary.HelpDesctiptionShowHideCursor);
+                        break;
+                    default:
+                        Console.WriteLine(StringsDictionary.UnknownCommand);
+                        break;
                 }
             }
         }
@@ -90,13 +91,17 @@ namespace UI
         /// </summary>
         private void Greatings()
         {
-            try
+            string filePath = $"{AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.GreatingFileName}.txt";
+
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine(File.ReadAllText(@"..\..\..\..\Greating.txt"));
+                Console.WriteLine(StringsDictionary.FileNotExistError);
             }
-            catch (FileNotFoundException e)
+            else
             {
-                Console.WriteLine($"Error: {e.Message}");
+                var fileContent = File.ReadAllText(filePath);
+
+                Console.WriteLine(fileContent);
             }
         }
 
@@ -105,45 +110,61 @@ namespace UI
         /// </summary>
         private void ReadMainMenuCommands()
         {
-            try
+            string filePath = $"{AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.MainMenuCommandsFileName}.txt";
+
+            if (!File.Exists(filePath))
             {
-                Console.WriteLine(File.ReadAllText(@"..\..\..\..\MainMenuCommands.txt"));
+                Console.WriteLine(StringsDictionary.FileNotExistError);
             }
-            catch (FileNotFoundException e)
+            else
             {
-                Console.WriteLine($"Error: {e.Message}");
+                var fileContent = File.ReadAllText(filePath);
+
+                Console.WriteLine(fileContent);
             }
         }
 
         /// <summary>
         /// Method configures a game, using user's input.
         /// </summary>
-        private void ConfigureGame()
+        private GameEngine ConfigureGame()
         {
-            Console.WriteLine("Before you start a new game, you need to configurate it.");
+            Console.WriteLine(StringsDictionary.OnConfigMessage);
 
-            try
+            Console.Write(StringsDictionary.RowsCountConfigMessage);
+            int rowsCount;
+            string rowsCountInput = Console.ReadLine();
+            bool isRowsNumber = int.TryParse(rowsCountInput, out rowsCount);
+
+            if (!isRowsNumber)
             {
-                Console.Write("Rows count (20-50): ");
-                int rowsCount = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine(StringsDictionary.InputFormatError);
 
-                Console.Write("Columns count(20-260): ");
-                int colsCount = Convert.ToInt32(Console.ReadLine());
+                return null;
+            }
+
+            Console.Write(StringsDictionary.ColumnsCountConfigMessage);
+            int columnsCount;
+            string columnsCountInput = Console.ReadLine();
+            bool isColumnsNumber = int.TryParse(columnsCountInput, out columnsCount);
+
+            if (!isColumnsNumber)
+            {
+                Console.WriteLine(StringsDictionary.InputFormatError);
+
+                return null;
+            }
+
+            if ((rowsCount < 20 || rowsCount > 50) && (columnsCount < 20 || columnsCount > 260))
+            {
+                Console.WriteLine(StringsDictionary.InputOutOfRangeError);
+                
+                return null;
+            }        
+
+            GameEngine gameEngine = new GameEngine(rowsCount, columnsCount);
             
-                if ((rowsCount < 20 || rowsCount > 50) && (colsCount < 20 || colsCount > 260))
-                {
-                    Console.WriteLine("Please, check your input and try again.");
-                    return;
-                }
-
-                GameEngine gameEngine = new GameEngine(rowsCount, colsCount);
-                RenderGame(gameEngine);
-            }
-            catch (FormatException e)
-            {
-                Console.WriteLine($"Error: {e.Message}");
-                return;
-            }
+            return gameEngine;
         }
 
         /// <summary>
@@ -152,29 +173,29 @@ namespace UI
         /// <param name="gameEngine">Game's core.</param>
         private void RenderGame(GameEngine gameEngine)
         {
-            Console.SetCursorPosition(0, 20);
+            Console.SetCursorPosition(0, 0);
             while (!Console.KeyAvailable)
             {
                 var currentGeneration = gameEngine.GetCurrentGeneration();
 
-                for (int y = 0; y < currentGeneration.GetLength(1); y++)
+                for (int currentRow = 0; currentRow < currentGeneration.GetLength(1); currentRow++)
                 {
                     var aliveDeadSymbols = new char[currentGeneration.GetLength(0)];
 
-                    for (int x = 0; x < currentGeneration.GetLength(0); x++)
+                    for (int currentColumn = 0; currentColumn < currentGeneration.GetLength(0); currentColumn++)
                     {
-                        if (currentGeneration[x, y])
+                        if (currentGeneration[currentColumn, currentRow])
                         {
-                            aliveDeadSymbols[x] = '#';
+                            aliveDeadSymbols[currentColumn] = '#';
                         }
                         else
                         {
-                            aliveDeadSymbols[x] = ' ';
+                            aliveDeadSymbols[currentColumn] = ' ';
                         }
                     }
                     Console.WriteLine(aliveDeadSymbols);
                 }
-                Console.SetCursorPosition(0, 20);
+                Console.SetCursorPosition(0, 0);
                 gameEngine.NextGeneration();
             }
             Thread.Sleep(1000);
