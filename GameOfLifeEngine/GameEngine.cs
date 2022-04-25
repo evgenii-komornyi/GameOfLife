@@ -54,10 +54,7 @@
                     // Actual row is mapped so that is not outside of the game field.
                     int actualRow = (currentRow + rowOffset + _rows) % _rows;
 
-                    if (_field[actualColumn, actualRow])
-                    {
-                        count++;
-                    }
+                    count = _field[actualColumn, actualRow] ? count++ : count;
                 }
             }
 
@@ -79,10 +76,7 @@
             {
                 for (int currentRow = 0; currentRow < _rows; currentRow++)
                 {
-                    if (_field[currentColumn, currentRow])
-                    {
-                        aliveCells++;
-                    }
+                    aliveCells = _field[currentColumn, currentRow] ? aliveCells++ : aliveCells;
                 }
             }
 
