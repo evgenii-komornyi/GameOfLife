@@ -8,9 +8,10 @@
     public class GameEngine
     {
         public uint CurrentGeneration { get; private set; }
-        private bool[,] _field;
-        private readonly int _rows;
+        public bool[,] GameField;
+/*        private readonly int _rows;
         private readonly int _columns;
+*/
         private readonly int _density = 2;
 
         /// <summary>
@@ -21,20 +22,33 @@
         /// <param name="columns">Count of the columns.</param>
         public GameEngine(int rows, int columns)
         {
-            _rows = rows;
-            _columns = columns;
-            _field = new bool[columns, rows];
+             GameField = new bool[columns, rows];
+        }
 
+        /// <summary>
+        /// Method creates a new game.
+        /// </summary>
         public void Generate()
         {
             Random random = new Random();
-            for (int currentColumn = 0; currentColumn < columns; currentColumn++)
+            for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
             {
-                for (int currentRow = 0; currentRow < rows; currentRow++)
+                for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
-                    _field[currentColumn, currentRow] = random.Next(_density) == 0;
+                    GameField[currentColumn, currentRow] = random.Next(_density) == 0;
                 }
             }
+        }
+
+        /// <summary>
+        /// Method loades a game.
+        /// </summary>
+        /// <param name="loadedGeneration">
+        /// Loading array into field.
+        /// </param>
+        public void LoadGame(bool[,] loadedGeneration)
+        {
+            GameField = loadedGeneration;
         }
 
         /// <summary>
@@ -52,16 +66,16 @@
                 for (int rowOffset = -1; rowOffset < 2; rowOffset++)
                 {
                     // Actual column is mapped so that is not outside of the game field.
-                    int actualColumn = (currentColumn + columnOffset + _columns) % _columns;
+                    int actualColumn = (currentColumn + columnOffset + GameField.GetLength(0)) % GameField.GetLength(0);
 
                     // Actual row is mapped so that is not outside of the game field.
-                    int actualRow = (currentRow + rowOffset + _rows) % _rows;
+                    int actualRow = (currentRow + rowOffset + GameField.GetLength(1)) % GameField.GetLength(1);
 
-                    count += _field[actualColumn, actualRow] ? 1 : 0;
+                    count += GameField[actualColumn, actualRow] ? 1 : 0;
                 }
             }
 
-            count -= _field[currentColumn, currentRow] ? 1 : 0;
+            count -= GameField[currentColumn, currentRow] ? 1 : 0;
 
             return count;
         }
@@ -75,11 +89,11 @@
         {
             int aliveCells = 0;
 
-            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
+            for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
             {
-                for (int currentRow = 0; currentRow < _rows; currentRow++)
+                for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
-                    aliveCells += _field[currentColumn, currentRow] ? 1 : 0;
+                    aliveCells += GameField[currentColumn, currentRow] ? 1 : 0;
                 }
             }
 
@@ -91,46 +105,29 @@
         /// </summary>
         public void NextGeneration()
         {
-            var newField = new bool[_columns, _rows];
+            var newField = new bool[GameField.GetLength(0), GameField.GetLength(1)];
             
-            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
+            for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
             {
-                for (int currentRow = 0; currentRow < _rows; currentRow++)
+                for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
                     var neighboursCount = CountNeighbours(currentColumn, currentRow);
 
-                    if (!_field[currentColumn, currentRow] && neighboursCount == 3)
+                    if (!GameField[currentColumn, currentRow] && neighboursCount == 3)
                     {
                         newField[currentColumn, currentRow] = true;
-                    } else if (_field[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
+                    } else if (GameField[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
                     {
                         newField[currentColumn, currentRow] = false;
                     } else
                     {
-                        newField[currentColumn, currentRow] = _field[currentColumn, currentRow];
+                        newField[currentColumn, currentRow] = GameField[currentColumn, currentRow];
                     }
                 }
             }
-            _field = newField;
+            GameField = newField;
             CurrentGeneration++;
             Thread.Sleep(1000);
-        }
-
-        /// <summary>
-        /// Method calculates current generation.
-        /// </summary>
-        /// <returns>Current generation.</returns>
-        public bool[,] GetCurrentGeneration()
-        {
-            bool[,] generation = new bool[_columns, _rows];
-            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
-            {
-                for (int currentRow = 0; currentRow < _rows; currentRow++)
-                {
-                    generation[currentColumn, currentRow] = _field[currentColumn, currentRow];
-                }
-            }
-            return generation;
         }
     }
 }
