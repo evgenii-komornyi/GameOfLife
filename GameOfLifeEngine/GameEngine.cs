@@ -9,27 +9,27 @@
     {
         private bool[,] _field;
         private readonly int _rows;
-        private readonly int _cols;
+        private readonly int _columns;
+        private readonly int _density = 2;
 
         /// <summary>
         /// Constructor creates based-on user input universe
         /// and fills this universe randomly.
         /// </summary>
         /// <param name="rows">Count of the rows.</param>
-        /// <param name="cols">Count of the cols.</param>
-        /// <param name="density">Count of density.</param>
-        public GameEngine(int rows, int cols, int density = 2)
+        /// <param name="columns">Count of the columns.</param>
+        public GameEngine(int rows, int columns)
         {
             _rows = rows;
-            _cols = cols;
-            _field = new bool[cols, rows];
+            _columns = columns;
+            _field = new bool[columns, rows];
 
             Random random = new Random();
-            for (int x = 0; x < cols; x++)
+            for (int currentColumn = 0; currentColumn < columns; currentColumn++)
             {
-                for (int y = 0; y < rows; y++)
+                for (int currentRow = 0; currentRow < rows; currentRow++)
                 {
-                    _field[x, y] = random.Next(density) == 0;
+                    _field[currentColumn, currentRow] = random.Next(_density) == 0;
                 }
             }
         }
@@ -37,42 +37,33 @@
         /// <summary>
         /// Method calculates how many neighbors are near current cell.
         /// </summary>
-        /// <param name="x">Current col number.</param>
-        /// <param name="y">Current row number.</param>
+        /// <param name="currentColumn">Current column number.</param>
+        /// <param name="currentRow">Current row number.</param>
         /// <returns>Neighbour count.</returns>
-        private int CountNeighbours(int x, int y)
+        private int CountNeighbours(int currentColumn, int currentRow)
         {
             int count = 0;
 
-            for (int i = -1; i < 2; i++)
+            for (int columnOffset = -1; columnOffset < 2; columnOffset++)
             {
-                for (int j = -1; j < 2; j++)
+                for (int rowOffset = -1; rowOffset < 2; rowOffset++)
                 {
-                    int col = (x + i + _cols) % _cols; // if last col, then will first
-                    int row = (y + j + _rows) % _rows; // if last row, then will first
+                    //
+                    int actualColumn = (currentColumn + columnOffset + _columns) % _columns;
+                    
+                    //
+                    int actualRow = (currentRow + rowOffset + _rows) % _rows;
 
-                    bool isSelfChecking = col == x && row == y;
-
-                    if (HasLife(col, row) && !isSelfChecking)
+                    if (_field[actualColumn, actualRow])
                     {
                         count++;
                     }
                 }
             }
 
-            return count;
-        }
+            count -= _field[currentColumn, currentRow] ? 1 : 0;
 
-        /// <summary>
-        /// Method returns true if universe has at least
-        /// one life cell.
-        /// </summary>
-        /// <param name="col">Current col.</param>
-        /// <param name="row">Current row.</param>
-        /// <returns>The existence of a living cell.</returns>
-        private bool HasLife(int col, int row)
-        {
-            return _field[col, row];
+            return count;
         }
 
         /// <summary>
@@ -84,7 +75,7 @@
         {
             int aliveCells = 0;
 
-            for (int x = 0; x < _cols; x++)
+            for (int x = 0; x < _columns; x++)
             {
                 for (int y = 0; y < _rows; y++)
                 {
@@ -103,9 +94,9 @@
         /// </summary>
         public void NextGeneration()
         {
-            var newField = new bool[_cols, _rows];
+            var newField = new bool[_columns, _rows];
             
-            for (int x = 0; x < _cols; x++)
+            for (int x = 0; x < _columns; x++)
             {
                 for (int y = 0; y < _rows; y++)
                 {
@@ -134,8 +125,8 @@
         /// <returns>Current generation.</returns>
         public bool[,] GetCurrentGeneration()
         {
-            bool[,] generation = new bool[_cols, _rows];
-            for (int x = 0; x < _cols; x++)
+            bool[,] generation = new bool[_columns, _rows];
+            for (int x = 0; x < _columns; x++)
             {
                 for (int y = 0; y < _rows; y++)
                 {
