@@ -69,6 +69,8 @@ namespace UI
         #region Messages
         public const string UnknownCommandMessage = "This command isn't support. Please read help documentation. (For help type \"?\", or \"help\")";
 
+        public const string PressAnyKeyMessage = "Press any key to continue...";
+
         public const string OnConfigMessage = "Before you start a new game, you need to configurate it.";
         public const string RowsCountConfigMessage = "Rows count (20-50): ";
         public const string ColumnsCountConfigMessage = "Columns count(20-260): ";

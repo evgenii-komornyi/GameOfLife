@@ -57,6 +57,7 @@ namespace UI
                         else
                         {
                             Console.WriteLine(StringsDictionary.RenderNewGameError);
+                            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
                             Console.ReadKey();
                         }
                         break;
@@ -73,6 +74,7 @@ namespace UI
                         if (_currentGeneration == null || _currentGeneration.Length == 0)
                         {
                             Console.WriteLine(StringsDictionary.OnSaveWithoutAnyGamesMessage);
+                            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
                             Console.ReadKey();
                             continue;
                         }
@@ -88,6 +90,7 @@ namespace UI
                         if (_currentGeneration == null || _currentGeneration.Length == 0)
                         {
                             Console.WriteLine(StringsDictionary.OnResumeWithoutAnyGamesMessage);
+                            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
                             Console.ReadKey();
                             continue;
                         }
@@ -96,6 +99,8 @@ namespace UI
                     case StringsDictionary.HelpCommandSign:
                     case StringsDictionary.HelpCommandText:
                         GetHelpCommands();
+                        Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                        Console.ReadKey();
                         break;
                     default:
                         Console.WriteLine(StringsDictionary.UnknownCommandMessage);
@@ -128,6 +133,8 @@ namespace UI
             if (!File.Exists(filePath))
             {
                 Console.WriteLine(StringsDictionary.FileNotExistError);
+                Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                Console.ReadKey();
             }
             else
             {
@@ -135,7 +142,7 @@ namespace UI
 
                 Console.WriteLine(fileContent);
             }
-            Console.WriteLine("Press any key to continue...");
+            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
             Console.ReadKey();
         }
 
@@ -149,6 +156,8 @@ namespace UI
             if (!File.Exists(filePath))
             {
                 Console.WriteLine(StringsDictionary.FileNotExistError);
+                Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                Console.ReadKey();
             }
             else
             {
@@ -356,9 +365,9 @@ namespace UI
 
         private void SetWindowSize(int width, int height)
         {
-#pragma warning disable CA1416 // Validate platform compatibility
+            #pragma warning disable CA1416 // Validate platform compatibility
             Console.SetWindowSize(width, height);
-#pragma warning restore CA1416 // Validate platform compatibility
+            #pragma warning restore CA1416 // Validate platform compatibility
         }
     }
 }
