@@ -48,10 +48,10 @@
             {
                 for (int rowOffset = -1; rowOffset < 2; rowOffset++)
                 {
-                    //
+                    // Actual column is mapped so that is not outside of the game field.
                     int actualColumn = (currentColumn + columnOffset + _columns) % _columns;
-                    
-                    //
+
+                    // Actual row is mapped so that is not outside of the game field.
                     int actualRow = (currentRow + rowOffset + _rows) % _rows;
 
                     if (_field[actualColumn, actualRow])
