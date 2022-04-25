@@ -42,6 +42,8 @@ namespace UI
         public const string OnConfigMessage = "Before you start a new game, you need to configurate it.";
         public const string RowsCountConfigMessage = "Rows count (20-50): ";
         public const string ColumnsCountConfigMessage = "Columns count(20-260): ";
+
+        public const string PressAnyKeyMessage = "Press any key to continue...";
         #endregion
 
         #region Errors

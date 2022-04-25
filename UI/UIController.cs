@@ -29,8 +29,9 @@ namespace UI
 
             while (!exitMainMenu)
             {
+                Console.Clear();
                 ReadMainMenuCommands();
-               
+                
                 Console.Write(StringsDictionary.TypeCommand);
                 string commandForMainMenu = Console.ReadLine();
 
@@ -50,6 +51,8 @@ namespace UI
                         else
                         {
                             Console.WriteLine(StringsDictionary.RenderNewGameError);
+                            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                            Console.ReadKey();
                         }
                         break;
                     case StringsDictionary.ClearConsoleCommandNumber:
@@ -66,11 +69,17 @@ namespace UI
                         Console.WriteLine(StringsDictionary.HelpDesctiptionNewGame);
                         Console.WriteLine(StringsDictionary.HelpDesctiptionClearConsole);
                         Console.WriteLine(StringsDictionary.HelpDesctiptionShowHideCursor);
+
+                        Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                        Console.ReadKey();
                         break;
                     default:
                         Console.WriteLine(StringsDictionary.UnknownCommand);
+                        Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+                        Console.ReadKey();
                         break;
                 }
+                Thread.Sleep(1000);
             }
         }
 
@@ -103,6 +112,8 @@ namespace UI
 
                 Console.WriteLine(fileContent);
             }
+            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+            Console.ReadKey();
         }
 
         /// <summary>
@@ -176,8 +187,7 @@ namespace UI
             Console.SetCursorPosition(0, 0);
             while (!Console.KeyAvailable)
             {
-                var currentGeneration = gameEngine.GetCurrentGeneration();
-
+                var currentGeneration = gameEngine.GameField;
                 for (int currentRow = 0; currentRow < currentGeneration.GetLength(1); currentRow++)
                 {
                     var aliveDeadSymbols = new char[currentGeneration.GetLength(0)];
@@ -198,8 +208,6 @@ namespace UI
                 Console.SetCursorPosition(0, 0);
                 gameEngine.NextGeneration();
             }
-            Thread.Sleep(1000);
-            Console.Clear();
         }
     }
 }
