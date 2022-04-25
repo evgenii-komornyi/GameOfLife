@@ -75,11 +75,11 @@
         {
             int aliveCells = 0;
 
-            for (int x = 0; x < _columns; x++)
+            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
             {
-                for (int y = 0; y < _rows; y++)
+                for (int currentRow = 0; currentRow < _rows; currentRow++)
                 {
-                    if (HasLife(x, y))
+                    if (_field[currentColumn, currentRow])
                     {
                         aliveCells++;
                     }
@@ -96,22 +96,21 @@
         {
             var newField = new bool[_columns, _rows];
             
-            for (int x = 0; x < _columns; x++)
+            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
             {
-                for (int y = 0; y < _rows; y++)
+                for (int currentRow = 0; currentRow < _rows; currentRow++)
                 {
-                    var neighboursCount = CountNeighbours(x, y);
-                    var hasLife = HasLife(x, y);
+                    var neighboursCount = CountNeighbours(currentColumn, currentRow);
 
-                    if (!hasLife && neighboursCount == 3)
+                    if (!_field[currentColumn, currentRow] && neighboursCount == 3)
                     {
-                        newField[x, y] = true;
-                    } else if (hasLife && (neighboursCount < 2 || neighboursCount > 3))
+                        newField[currentColumn, currentRow] = true;
+                    } else if (_field[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
                     {
-                        newField[x, y] = false;
+                        newField[currentColumn, currentRow] = false;
                     } else
                     {
-                        newField[x, y] = _field[x, y];
+                        newField[currentColumn, currentRow] = _field[currentColumn, currentRow];
                     }
                 }
             }
@@ -126,11 +125,11 @@
         public bool[,] GetCurrentGeneration()
         {
             bool[,] generation = new bool[_columns, _rows];
-            for (int x = 0; x < _columns; x++)
+            for (int currentColumn = 0; currentColumn < _columns; currentColumn++)
             {
-                for (int y = 0; y < _rows; y++)
+                for (int currentRow = 0; currentRow < _rows; currentRow++)
                 {
-                    generation[x, y] = _field[x, y];
+                    generation[currentColumn, currentRow] = _field[currentColumn, currentRow];
                 }
             }
             return generation;
