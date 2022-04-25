@@ -57,6 +57,7 @@ namespace UI
                         else
                         {
                             Console.WriteLine(StringsDictionary.RenderNewGameError);
+                            Console.ReadKey();
                         }
                         break;
                     case StringsDictionary.ClearConsoleCommandNumber:
@@ -72,6 +73,7 @@ namespace UI
                         if (_currentGeneration == null || _currentGeneration.Length == 0)
                         {
                             Console.WriteLine(StringsDictionary.OnSaveWithoutAnyGamesMessage);
+                            Console.ReadKey();
                             continue;
                         }
                         SaveGame();
@@ -86,6 +88,7 @@ namespace UI
                         if (_currentGeneration == null || _currentGeneration.Length == 0)
                         {
                             Console.WriteLine(StringsDictionary.OnResumeWithoutAnyGamesMessage);
+                            Console.ReadKey();
                             continue;
                         }
                         ResumeGame();
@@ -96,6 +99,7 @@ namespace UI
                         break;
                     default:
                         Console.WriteLine(StringsDictionary.UnknownCommandMessage);
+                        Console.ReadKey();
                         break;
                 }
                 Thread.Sleep(1000);
