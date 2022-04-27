@@ -1,22 +1,21 @@
 ﻿namespace GameOfLifeEngine
 {
     /// <summary>
-    /// The class is contained all logic and fields 
+    /// Class contains all logic and fields 
     /// that required description, provided from 
     /// https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     /// </summary>
+    [Serializable]
     public class GameEngine
     {
-        public uint CurrentGeneration { get; private set; }
         public bool[,] GameField;
-/*        private readonly int _rows;
-        private readonly int _columns;
-*/
         private readonly int _density = 2;
+        public uint CurrentGeneration { get; private set; }
 
         /// <summary>
-        /// Constructor creates based-on user input universe
-        /// and fills this universe randomly.
+        /// Class contains all logic and fields
+        /// that required description, provided from 
+        /// https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life        
         /// </summary>
         /// <param name="rows">Count of the rows.</param>
         /// <param name="columns">Count of the columns.</param>
@@ -26,9 +25,9 @@
         }
 
         /// <summary>
-        /// Method creates a new game.
+        /// Method initializes game data.
         /// </summary>
-        public void Generate()
+        public void InitializeData()
         {
             Random random = new Random();
             for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
@@ -38,17 +37,6 @@
                     GameField[currentColumn, currentRow] = random.Next(_density) == 0;
                 }
             }
-        }
-
-        /// <summary>
-        /// Method loades a game.
-        /// </summary>
-        /// <param name="loadedGeneration">
-        /// Loading array into field.
-        /// </param>
-        public void LoadGame(bool[,] loadedGeneration)
-        {
-            GameField = loadedGeneration;
         }
 
         /// <summary>
@@ -101,7 +89,7 @@
         }
 
         /// <summary>
-        /// Method calculates next generation of the cells every second.
+        /// Method calculates next generation of the cells.
         /// </summary>
         public void NextGeneration()
         {
@@ -127,7 +115,6 @@
             }
             GameField = newField;
             CurrentGeneration++;
-            Thread.Sleep(1000);
         }
     }
 }

@@ -2,8 +2,9 @@
 using UI;
 
 FileController fileController = new FileController();
+UserInterface userInterface = new UserInterface();
 
-Bootstrapper bootstrapper = new Bootstrapper(fileController);
+UIController uiController = new UIController(userInterface, fileController);
 
-UIController ui = new UIController(bootstrapper);
-ui.start();
+userInterface.Greatings();
+uiController.RunApplication();

@@ -3,155 +3,76 @@
 namespace Files
 {
     /// <summary>
-    /// Class to saving and loading games' files,
-    /// and getting files within directory.
+    /// Class to saving and loading games' file.
     /// </summary>
     public class FileController
     {
         /// <summary>
-        /// Method reads files within /games directory
-        /// and show list of files.
+        /// Method saves data to binary file.
         /// </summary>
-        public void GetDirectoryFiles()
+        /// <typeparam name="T">Type of saving object.</typeparam>
+        /// <param name="filePath">Path to file.</param>
+        /// <param name="objectToWrite">Saving object.</param>
+        public void WriteToBinaryFile<T>(string filePath, T objectToWrite)
         {
-            DirectoryInfo directoryInfo = new DirectoryInfo(@"../../../../games");
-            if (!directoryInfo.Exists)
+            CreateDirectoryIfNotExist(filePath);
+            using (Stream stream = File.Open(filePath, FileMode.Create))
             {
-                Console.WriteLine("Such directory does not exist.");
-                Console.WriteLine("Before load a game, you need to start a new game and save it.");
-            }
-
-            FileInfo[] files = directoryInfo.GetFiles();
-            if (files.Length == 0)
-            {
-                Console.WriteLine("Before load a game, you need to start a new game and save it.");
-            }
-
-            for (int i = 0; i < files.Length; i++)
-            {
-                Console.WriteLine($"{ i+1 }. {files[i].Name}");
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                binaryFormatter.Serialize(stream, objectToWrite);
             }
         }
 
         /// <summary>
-        /// Method saves data to the specific file.
+        /// Method creates the directory to saving games if it does not exist.
         /// </summary>
-        /// <param name="objectToSave">
-        /// Object contained data to save.
-        /// </param>
-        /// <param name="fileName">
-        /// File name to write the data.
-        /// </param>
-        public void Write(SavingObject objectToSave, string fileName)
+        /// <param name="filePath">Path to file.</param>
+        private void CreateDirectoryIfNotExist(string filePath)
         {
-            fileName = fileName.Trim();
-            StreamWriter streamWriter = new StreamWriter(@"../../../../games/" + fileName + ".gof");
-
-            string output = "";
-
-            for (int y = 0; y < objectToSave.CurrentGeneration.GetLength(1); y++)
+            if (!string.IsNullOrEmpty(GetDirectoryNameByPathToFile(filePath)) && !IsDirectoryExist(filePath))
             {
-                for (int x = 0; x < objectToSave.CurrentGeneration.GetLength(0); x++)
-                {
-                    output += objectToSave.CurrentGeneration[x, y] + " ";
-                }
-                streamWriter.WriteLine(output);
-                output = "";
+                Directory.CreateDirectory(GetDirectoryNameByPathToFile(filePath));
             }
-            streamWriter.Write(objectToSave.CurrentIterationCount);
-            streamWriter.Close();
         }
 
         /// <summary>
-        /// Method reads file's content and loads it into field.
+        /// Method loades data from binary file.
         /// </summary>
-        /// <param name="fileName">
-        /// File name to read the data.
-        /// </param>
-        /// <returns>
-        /// Object with created field, 
-        /// loaded positions and current iteration's count.
-        /// </returns>
-        public LoadingObject Read(string fileName)
+        /// <typeparam name="T">Type of loading object.</typeparam>
+        /// <param name="filePath">Path to file.</param>
+        /// <returns>Loading object.</returns>
+        public T ReadFromBinaryFile<T>(string filePath)
         {
-            String fileContent = File.ReadAllText(@"../../../../games/" + fileName + ".gof");
-            LoadingObject objectToLoad = new LoadingObject();
-
-            LoadingObject loadedGame = LoadGame(fileContent, objectToLoad);
-                       
-            if (loadedGame.GameCore == null && loadedGame.RowsCount == 0 && loadedGame.ColsCount == 0)
+            if (!IsDirectoryExist(filePath))
             {
-                return loadedGame;
+                return default(T);
             }
 
-            bool[,] loadedGeneration = new bool[loadedGame.ColsCount, loadedGame.RowsCount];
-
-            string[] rows = fileContent.Split("\n");
-            string[] cols;
-
-            try
+            using (Stream stream = File.Open(filePath, FileMode.Open))
             {
-                loadedGame.CurrentIterationCount = uint.Parse(rows[rows.Length - 1]);
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                return (T)binaryFormatter.Deserialize(stream);
             }
-            catch (FormatException e)
-            {
-                Console.WriteLine("File is broken.");
-                Console.WriteLine($"Error: {e.Message}");
-            }
-            
-            for (int y = 0; y < rows.Length - 1; y++)
-            {
-                cols = rows[y].Trim().Split(' ');
-
-                for (int x = 0; x < cols.Length; x++)
-                {
-                    bool boolString;
-                    if (bool.TryParse(cols[x], out boolString))
-                    {
-                        loadedGeneration[x, y] = boolString;
-                    }
-                }
-            }
-            loadedGame.GameCore.LoadGame(loadedGeneration);
-            loadedGame.GenerationToLoad = loadedGeneration;
-            
-            return objectToLoad;
         }
 
         /// <summary>
-        /// Method generates field based on rows and cols in the file.
+        /// Method checks if directory does exist.
         /// </summary>
-        /// <param name="fileContent">
-        /// File content from loading file.
-        /// </param>
-        /// <returns>
-        /// Object with generated field, 
-        /// rows count and cols count.
-        /// </returns>
-        private LoadingObject LoadGame(string fileContent, LoadingObject objectToLoad)
+        /// <param name="filePath">Path to file</param>
+        /// <returns>Directory does/does not exist</returns>
+        private bool IsDirectoryExist(string filePath)
         {
-            string[] rows = fileContent.Split("\n");
-            string[] cols = null;
+            return Directory.Exists(GetDirectoryNameByPathToFile(filePath));
+        }
 
-            for (int y = 0; y < rows.Length - 1; y++)
-            {
-                cols = rows[y].Trim().Split(' ');
-            }
-
-            if ((rows.Length < 20 || rows.Length > 50) && (cols.Length < 20 || cols.Length > 260))
-            {
-                objectToLoad.GameCore = null;
-                objectToLoad.RowsCount = 0;
-                objectToLoad.ColsCount = 0;
-            }
-
-            GameEngine loadedGame = new GameEngine(rows.Length - 1, cols.Length);
-
-            objectToLoad.GameCore = loadedGame;
-            objectToLoad.RowsCount = rows.Length - 1;
-            objectToLoad.ColsCount = cols.Length;
-
-            return objectToLoad;
+        /// <summary>
+        /// Method gets directory name by path to file.
+        /// </summary>
+        /// <param name="filePath">Path to file.</param>
+        /// <returns>Directory name.</returns>
+        private string GetDirectoryNameByPathToFile(string filePath)
+        {
+            return Path.GetDirectoryName(filePath);
         }
     }
 }

@@ -7,15 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLife", "GameOfLife\Ga
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameOfLifeEngine", "GameOfLifeEngine\GameOfLifeEngine.csproj", "{5E123980-9FD0-41CC-8790-4453CFB3EEC4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{357A4CFF-42B3-488F-BC04-DC656874F0B7}"
-	ProjectSection(SolutionItems) = preProject
-		Greating.txt = Greating.txt
-		MainMenuCommands.txt = MainMenuCommands.txt
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{62A749C2-AF1D-4112-8C8C-E2C54E93C785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileController", "FileController\FileController.csproj", "{67D4F090-029F-4EA0-87B6-912D052E18B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileController", "FileController\FileController.csproj", "{67D4F090-029F-4EA0-87B6-912D052E18B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
