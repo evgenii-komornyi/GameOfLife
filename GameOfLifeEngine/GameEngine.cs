@@ -113,6 +113,7 @@
                     }
                 }
             }
+
             GameField = newField;
             CurrentGeneration++;
         }
