@@ -102,6 +102,7 @@ namespace UI
                         Console.ReadKey();
                         break;
                 }
+                Thread.Sleep(1000);
             }
         }
         
@@ -121,6 +122,8 @@ namespace UI
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
                 isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
             }
+            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+            Console.ReadKey();
         }
 
         /// <summary>

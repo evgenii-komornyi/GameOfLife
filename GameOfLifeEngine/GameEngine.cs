@@ -107,7 +107,8 @@
                     } else if (GameField[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
                     {
                         newField[currentColumn, currentRow] = false;
-                    } else
+                    }
+                    else
                     {
                         newField[currentColumn, currentRow] = GameField[currentColumn, currentRow];
                     }
