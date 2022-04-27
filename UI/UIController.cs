@@ -1,4 +1,4 @@
-﻿using Files;
+using Files;
 using GameOfLifeEngine;
 
 namespace UI
@@ -102,6 +102,7 @@ namespace UI
                         Console.ReadKey();
                         break;
                 }
+                Thread.Sleep(1000);
             }
         }
         

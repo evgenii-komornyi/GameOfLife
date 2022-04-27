@@ -94,7 +94,7 @@
         public void NextGeneration()
         {
             var newField = new bool[GameField.GetLength(0), GameField.GetLength(1)];
-            
+
             for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
             {
                 for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
@@ -107,7 +107,8 @@
                     } else if (GameField[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
                     {
                         newField[currentColumn, currentRow] = false;
-                    } else
+                    }
+                    else
                     {
                         newField[currentColumn, currentRow] = GameField[currentColumn, currentRow];
                     }

@@ -72,6 +72,7 @@ namespace UI
         public const string OnResumeWithoutAnyGamesMessage = "Create new game, or load saving game.";
 
         public const string EnterFileNameMessage = "Enter file name: ";
+
         #endregion
 
         #region Errors
