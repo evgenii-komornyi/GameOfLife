@@ -48,7 +48,6 @@ namespace UI
         public const string SaveGameHelpDescription = "(4), or save - to save current game;";
         public const string LoadGameHelpDesctiption = "(5), or load - to load saved game;";
         public const string ResumeGameHelpDesctiption = "(6), or resume - to resume stopped game;";
-
         #endregion
 
         #region DirectoriesAndFiles
@@ -77,7 +76,6 @@ namespace UI
         #region Errors
         public const string InputOutOfRangeError = "Input was out of range. Please, check your input and try again.";
         public const string NotANumberError = "Input format must be a number. Please, check your input and try again";
-
 
         public const string DirectoryNotExist = "Such directory does not exist. Start a new game and save it.";
         public const string DrawNewGameError = "You do not have any games.";
