@@ -29,14 +29,14 @@ namespace Files
         /// <param name="filePath">Path to file.</param>
         private void CreateDirectoryIfNotExist(string filePath)
         {
-            if (!string.IsNullOrEmpty(GetDirectoryNameByPathToFile(filePath)) && !IsDirectoryExist(filePath))
+            if (!string.IsNullOrEmpty(Path.GetDirectoryName(filePath)) && !IsDirectoryExist(filePath))
             {
-                Directory.CreateDirectory(GetDirectoryNameByPathToFile(filePath));
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
             }
         }
 
         /// <summary>
-        /// Method loades data from binary file.
+        /// Method loads data from binary file.
         /// </summary>
         /// <typeparam name="T">Type of loading object.</typeparam>
         /// <param name="filePath">Path to file.</param>
@@ -62,17 +62,7 @@ namespace Files
         /// <returns>Directory does/does not exist</returns>
         private bool IsDirectoryExist(string filePath)
         {
-            return Directory.Exists(GetDirectoryNameByPathToFile(filePath));
-        }
-
-        /// <summary>
-        /// Method gets directory name by path to file.
-        /// </summary>
-        /// <param name="filePath">Path to file.</param>
-        /// <returns>Directory name.</returns>
-        private string GetDirectoryNameByPathToFile(string filePath)
-        {
-            return Path.GetDirectoryName(filePath);
+            return Directory.Exists(Path.GetDirectoryName(filePath));
         }
     }
 }
