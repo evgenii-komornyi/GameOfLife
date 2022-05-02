@@ -7,9 +7,9 @@ namespace UI
     /// Class contains all logic layer  
     /// to start a game from User Interface.
     /// </summary>
-    public class UIController
+    public class GameManager
     {
-        private GameEngine _newGame;
+        private GameEngine _game;
         private UserInterface _userInterface;
         private FileController _fileController;
 
@@ -19,7 +19,7 @@ namespace UI
         /// </summary>
         /// <param name="userInterface">User Interface instance.</param>
         /// <param name="fileController">File Controller instance.</param>
-        public UIController(UserInterface userInterface, FileController fileController)
+        public GameManager(UserInterface userInterface, FileController fileController)
         {
             this._userInterface = userInterface;
             this._fileController = fileController;
@@ -30,6 +30,8 @@ namespace UI
         /// </summary>
         public void RunApplication()
         {
+            _userInterface.ShowGreetingMessage();
+
             bool exitGame = false;
 
             while (!exitGame)
@@ -57,7 +59,7 @@ namespace UI
                         break;
                     case StringsDictionary.SaveGameCommandNumber:
                     case StringsDictionary.SaveGameCommandText:
-                        if (_newGame == null || _newGame.GameField.Length == 0)
+                        if (_game == null || _game.GameField.Length == 0)
                         {
                             _userInterface.ShowMessage(StringsDictionary.OnSaveWithoutAnyGamesMessage);
                             _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
@@ -68,20 +70,20 @@ namespace UI
                         break;
                     case StringsDictionary.LoadGameCommandNumber:
                     case StringsDictionary.LoadGameCommandText:
-                        if (_newGame == null)
+                        LoadGame();
+                        if (_game == null)
                         {
                             _userInterface.ShowMessage(StringsDictionary.DirectoryNotExist);
                             _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
                             Console.ReadKey();
                             continue;
                         }
-                        LoadGame();
                         _userInterface.ClearConsole();
                         RunGame();
                         break;
                     case StringsDictionary.ResumeGameCommandNumber:
                     case StringsDictionary.ResumeGameCommandText:
-                        if (_newGame == null)
+                        if (_game == null)
                         {
                             _userInterface.ShowMessage(StringsDictionary.OnResumeWithoutAnyGamesMessage);
                             _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
@@ -115,14 +117,14 @@ namespace UI
             bool isGameOnGoing = true;
             while (isGameOnGoing)
             {
-                _userInterface.DrawGame(_newGame);
-                _newGame.NextGeneration();
+                _userInterface.DrawGame(_game);
+                _game.NextGeneration();
 
                 Thread.Sleep(1000);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
                 isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
             }
-            Console.WriteLine(StringsDictionary.PressAnyKeyMessage);
+            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
             Console.ReadKey();
         }
 
@@ -134,8 +136,8 @@ namespace UI
             int columnsCount = _userInterface.GetLimitedValue(StringsDictionary.ColumnsCountConfigMessage, 10, 260);
             int rowsCount = _userInterface.GetLimitedValue(StringsDictionary.RowsCountConfigMessage, 10, 50);
 
-            _newGame = new GameEngine(rowsCount, columnsCount);
-            _newGame.InitializeData();
+            _game = new GameEngine(rowsCount, columnsCount);
+            _game.InitializeData();
         }
 
         /// <summary>
@@ -143,7 +145,7 @@ namespace UI
         /// </summary>
         private void SaveGame()
         {
-            _fileController.WriteToBinaryFile<GameEngine>(BuildPath(StringsDictionary.SavingLoadingFilesFolder), _newGame);
+            _fileController.WriteToBinaryFile<GameEngine>(BuildPath(StringsDictionary.SavingLoadingFilesFolder), _game);
         }
 
         /// <summary>
@@ -152,7 +154,7 @@ namespace UI
         /// </summary>
         private void LoadGame()
         {
-            _newGame = _fileController.ReadFromBinaryFile<GameEngine>(BuildPath(StringsDictionary.SavingLoadingFilesFolder));
+            _game = _fileController.ReadFromBinaryFile<GameEngine>(BuildPath(StringsDictionary.SavingLoadingFilesFolder));
         }
 
         /// <summary>
@@ -162,7 +164,7 @@ namespace UI
         /// <returns>Built path.</returns>
         private string BuildPath(string directory = "")
         {
-            string savingLoadingDirectory = string.IsNullOrEmpty(directory) ? "" : directory;
+            string savingLoadingDirectory = string.IsNullOrEmpty(directory) ? string.Empty : directory;
 
             return $"{AppDomain.CurrentDomain.BaseDirectory}{savingLoadingDirectory}{StringsDictionary.SavingLoadingFileName}";
         }

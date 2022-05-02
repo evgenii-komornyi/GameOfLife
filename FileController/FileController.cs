@@ -1,6 +1,4 @@
-﻿using GameOfLifeEngine;
-
-namespace Files
+﻿namespace Files
 {
     /// <summary>
     /// Class to saving and loading games' file.

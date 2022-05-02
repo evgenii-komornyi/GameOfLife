@@ -92,7 +92,7 @@ namespace UI
         /// <summary>
         /// Method reads file with ASCII game's name.
         /// </summary>
-        public void Greatings()
+        public void ShowGreetingMessage()
         {
             string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.GreatingFileName;
 

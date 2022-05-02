@@ -4,7 +4,6 @@ using UI;
 FileController fileController = new FileController();
 UserInterface userInterface = new UserInterface();
 
-UIController uiController = new UIController(userInterface, fileController);
+GameManager gameManager = new GameManager(userInterface, fileController);
 
-userInterface.Greatings();
-uiController.RunApplication();
+gameManager.RunApplication();
