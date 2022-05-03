@@ -1,29 +1,38 @@
 ﻿namespace GameOfLifeEngine
 {
     /// <summary>
-    /// The class is contained all logic and fields 
+    /// Class contains all logic and fields 
     /// that required description, provided from 
     /// https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     /// </summary>
+    [Serializable]
     public class GameEngine
     {
         public bool[,] GameField;
         private readonly int _density = 2;
+        public uint CurrentGeneration { get; private set; }
 
         /// <summary>
-        /// Constructor creates based-on user input universe
-        /// and fills this universe randomly.
+        /// Class contains all logic and fields
+        /// that required description, provided from 
+        /// https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life        
         /// </summary>
         /// <param name="rows">Count of the rows.</param>
         /// <param name="columns">Count of the columns.</param>
         public GameEngine(int rows, int columns)
         {
-            GameField = new bool[columns, rows];
+             GameField = new bool[columns, rows];
+        }
 
+        /// <summary>
+        /// Method initializes game data.
+        /// </summary>
+        public void InitializeData()
+        {
             Random random = new Random();
-            for (int currentColumn = 0; currentColumn < columns; currentColumn++)
+            for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)
             {
-                for (int currentRow = 0; currentRow < rows; currentRow++)
+                for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
                     GameField[currentColumn, currentRow] = random.Next(_density) == 0;
                 }
@@ -80,7 +89,7 @@
         }
 
         /// <summary>
-        /// Method calculates next generation of the cells every second.
+        /// Method calculates next generation of the cells.
         /// </summary>
         public void NextGeneration()
         {
@@ -95,8 +104,7 @@
                     if (!GameField[currentColumn, currentRow] && neighboursCount == 3)
                     {
                         newField[currentColumn, currentRow] = true;
-                    }
-                    else if (GameField[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
+                    } else if (GameField[currentColumn, currentRow] && (neighboursCount < 2 || neighboursCount > 3))
                     {
                         newField[currentColumn, currentRow] = false;
                     }
@@ -106,8 +114,9 @@
                     }
                 }
             }
+
             GameField = newField;
-            Thread.Sleep(1000);
+            CurrentGeneration++;
         }
-    } 
+    }
 }

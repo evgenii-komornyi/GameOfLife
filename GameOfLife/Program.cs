@@ -1,5 +1,9 @@
-﻿using UI;
+﻿using Files;
+using UI;
 
-UIController ui = new UIController();
+FileController fileController = new FileController();
+UserInterface userInterface = new UserInterface();
 
-ui.start();
+GameManager gameManager = new GameManager(userInterface, fileController);
+
+gameManager.RunApplication();
