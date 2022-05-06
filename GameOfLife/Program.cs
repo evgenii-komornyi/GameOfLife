@@ -1,4 +1,4 @@
-﻿using Files;
+using Files;
 using UI;
 
 FileController fileController = new FileController();
