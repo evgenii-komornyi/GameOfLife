@@ -81,7 +81,7 @@
             {
                 for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
-                    aliveCells += GameField[currentColumn, currentRow] ? 1 : 0;
+                    aliveCells += GameField[currentColumn, currentRow] ? 1 : 0;                           
                 }
             }
 

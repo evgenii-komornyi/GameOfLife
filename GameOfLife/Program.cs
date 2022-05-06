@@ -2,9 +2,9 @@
 using UI;
 
 FileController fileController = new FileController();
-UserInterface userInterface = new UserInterface();
+Window window = new Window();
+UserInterface userInterface = new UserInterface(window);
 
-UIController uiController = new UIController(userInterface, fileController);
+GameManager gameManager = new GameManager(userInterface, fileController, window);
 
-userInterface.Greatings();
-uiController.RunApplication();
+gameManager.RunApplication();

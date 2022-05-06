@@ -8,6 +8,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="source\Greating.txt" />
+    <None Remove="source\MainMenuCommands.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="source\Greating.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="source\MainMenuCommands.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameOfLifeEngine\GameOfLifeEngine.csproj" />
     <ProjectReference Include="..\UI\UI.csproj" />
   </ItemGroup>

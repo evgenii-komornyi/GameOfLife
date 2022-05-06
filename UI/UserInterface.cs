@@ -10,7 +10,12 @@ namespace UI
 {
     public class UserInterface
     {
-        private bool _isCursorVisible = true;
+        private Window _window;
+
+        public UserInterface(Window window)
+        {
+            this._window = window;
+        }
 
         /// <summary>
         /// Method gets response in the main menu from user. 
@@ -18,11 +23,11 @@ namespace UI
         /// <returns>User prompt.</returns>
         public string GetResponseFromMenu()
         {
-            SetTitle(StringsDictionary.GameTitle);
-            ClearConsole();
+            _window.SetTitle(StringsDictionary.GameTitle);
+            _window.ClearConsole();
             ReadMainMenuCommands();
-
-            Console.Write(StringsDictionary.TypeCommand);
+                      
+            ShowMessage(StringsDictionary.TypeCommand, false);
 
             return Console.ReadLine();
         }
@@ -31,14 +36,11 @@ namespace UI
         /// Method draws field and cells on the screen.
         /// </summary>
         /// <param name="field">Game field.</param>
-        public void DrawGame(GameEngine field)
+        public void DrawField(GameEngine field, int offsetX, int offsetY)
         {
-            SetWindowSize(272, 70);
-            SetCursorPosition(0, 0);
-                        
-            SetTitle($"Current iteration: {field.CurrentGeneration.ToString()} - Alive cells: {field.CountAliveCells().ToString()}");
             for (int currentRow = 0; currentRow < field.GameField.GetLength(1); currentRow++)
             {
+                _window.SetCursorPosition(offsetX, offsetY + currentRow + 10);
                 var aliveDeadSymbols = new char[field.GameField.GetLength(0)];
 
                 for (int currentColumn = 0; currentColumn < field.GameField.GetLength(0); currentColumn++)
@@ -52,10 +54,46 @@ namespace UI
                         aliveDeadSymbols[currentColumn] = StringsDictionary.DeadCellSymbol;
                     }
                 }
-                Console.WriteLine(aliveDeadSymbols);
+                
+                Console.Write(aliveDeadSymbols);
+                _window.SetCursorPosition(offsetX, offsetY + currentRow + 10);
             }
+        }
 
-            SetCursorPosition(0, 0);    
+        /// <summary>
+        /// Method draws several game's fields on the screen.
+        /// </summary>
+        /// <param name="fields">Game fields.</param>
+        public void DrawMultiField(GameEngine[] fields)
+        {
+            int offsetX = 0;
+            int offsetY = 0;
+
+            for (int currentGame = 0; currentGame < fields.Length; currentGame++)
+            {
+                if (currentGame < 4)
+                {
+                    offsetX = currentGame * (fields[currentGame].GameField.GetLength(0) + 1);
+                }
+                else
+                {
+                    offsetX = (currentGame - 4) * (fields[currentGame].GameField.GetLength(0) + 1);
+                    offsetY = fields[currentGame].GameField.GetLength(1) + 1;
+                }
+                DrawField(fields[currentGame], offsetX, offsetY);
+            }
+        }
+
+        /// <summary>
+        /// Method draws separator.
+        /// </summary>
+        /// <param name="countSeparator">Count of the separators.</param>
+        public void DrawSeparator(int countSeparator)
+        {
+            for (int currentTime = 0; currentTime < countSeparator; currentTime++)
+            {
+                ShowMessage(StringsDictionary.Separator, false);
+            }
         }
 
         /// <summary>
@@ -75,26 +113,24 @@ namespace UI
         /// Method shows message to user.
         /// </summary>
         /// <param name="message">Message to show.</param>
-        public void ShowMessage(string message)
+        public void ShowMessage(string message, bool useWriteLine = true)
         {
-            Console.WriteLine(message);
+            if (useWriteLine)
+            {
+                Console.WriteLine(message);
+            }
+            else
+            {
+                Console.Write(message);
+            }
         }
-
-        /// <summary>
-        /// Method shows/hides blinking console's cursor.
-        /// </summary>
-        public void ShowHideCursor()
-        {
-            _isCursorVisible = !_isCursorVisible;
-            Console.CursorVisible = _isCursorVisible;
-        }
-
+        
         /// <summary>
         /// Method reads file with ASCII game's name.
         /// </summary>
-        public void Greatings()
+        public void ShowGreetingMessage()
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.GreatingFileName;
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.SourceDirectory + StringsDictionary.GreatingFileName;
 
             var fileContent = File.ReadAllText(filePath);
 
@@ -109,7 +145,7 @@ namespace UI
         /// </summary>
         private void ReadMainMenuCommands()
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.MainMenuCommandsFileName;
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.SourceDirectory + StringsDictionary.MainMenuCommandsFileName;
 
             var fileContent = File.ReadAllText(filePath);
 
@@ -122,51 +158,11 @@ namespace UI
         public void GetHelpCommands()
         {
             ShowMessage(StringsDictionary.ExitHelpDescription);
-            ShowMessage(StringsDictionary.NewGameHelpDesctiption);
-            ShowMessage(StringsDictionary.ClearConsoleHelpDesctiption);
-            ShowMessage(StringsDictionary.ShowHideCursorHelpDesctiption);
+            ShowMessage(StringsDictionary.CreateThousandGamesHelpDesctiption);
+            ShowMessage(StringsDictionary.SelectGamesHelpDesctiption);
             ShowMessage(StringsDictionary.SaveGameHelpDescription);
             ShowMessage(StringsDictionary.LoadGameHelpDesctiption);
-            ShowMessage(StringsDictionary.ResumeGameHelpDesctiption);
-        }
-
-        /// <summary>
-        /// Method clears console window.
-        /// </summary>
-        public void ClearConsole()
-        {
-            Console.Clear();
-        }
-
-        /// <summary>
-        /// Method sets console window's title.
-        /// </summary>
-        /// <param name="title">Title.</param>
-        private void SetTitle(string title)
-        {
-            Console.Title = title;
-        }
-
-        /// <summary>
-        /// Method sets beginning cursor's position. 
-        /// </summary>
-        /// <param name="left">Shift from left.</param>
-        /// <param name="top">Shift from top.</param>
-        private void SetCursorPosition(int left, int top)
-        {
-            Console.SetCursorPosition(left, top);
-        }
-
-        /// <summary>
-        /// Method sets window's size.
-        /// </summary>
-        /// <param name="width">Width.</param>
-        /// <param name="height">Height.</param>
-        private void SetWindowSize(int width, int height)
-        {
-            #pragma warning disable CA1416 // Validate platform compatibility
-            Console.SetWindowSize(width, height);
-            #pragma warning restore CA1416 // Validate platform compatibility
+            ShowMessage(StringsDictionary.ShowHideCursorHelpDesctiption);
         }
 
         /// <summary>
@@ -178,7 +174,7 @@ namespace UI
         {
             while(true)
             {
-                Console.Write(prompt);
+                ShowMessage(prompt, false);
                 string valueInput = Console.ReadLine();
             
                 if (int.TryParse(valueInput, out int value))

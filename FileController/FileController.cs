@@ -1,6 +1,4 @@
-﻿using GameOfLifeEngine;
-
-namespace Files
+﻿namespace Files
 {
     /// <summary>
     /// Class to saving and loading games' file.
@@ -43,7 +41,7 @@ namespace Files
         /// <returns>Loading object.</returns>
         public T ReadFromBinaryFile<T>(string filePath)
         {
-            if (!IsDirectoryExist(filePath))
+            if (!IsDirectoryExist(filePath) || !File.Exists(filePath))
             {
                 return default(T);
             }
