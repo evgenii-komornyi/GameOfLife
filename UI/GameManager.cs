@@ -1,33 +1,32 @@
 using Files;
 using GameOfLifeEngine;
+using Repository;
 
 namespace UI
 {
     /// <summary>
-    /// Class contains all logic layer  
-    /// to start a game from User Interface.
+    /// Class contains all logic layer to start a game from User Interface.
     /// </summary>
     public class GameManager
     {
-        private GameEngine[] _thousandGames;
+        private GameEngine[] _games;
         private GameEngine[] _gamesOnScreen;
         private int[] _selectedGamesNumbers;
 
         private UserInterface _userInterface;
-        private FileController _fileController;
+        private FileManager _fileManager;
         private Window _window;
 
         /// <summary>
-        /// Class contains all logic layer  
-        /// to start a game from User Interface.
+        /// Class contains all logic layer to start a game from User Interface.
         /// </summary>
         /// <param name="userInterface">User Interface instance.</param>
-        /// <param name="fileController">File Controller instance.</param>
+        /// <param name="fileManager">File Controller instance.</param>
         /// <param name="window">Window instanse.</param>
-        public GameManager(UserInterface userInterface, FileController fileController, Window window)
+        public GameManager(UserInterface userInterface, FileManager fileManager, Window window)
         {
             this._userInterface = userInterface;
-            this._fileController = fileController;
+            this._fileManager = fileManager;
             this._window = window;
         }
 
@@ -36,152 +35,139 @@ namespace UI
         /// </summary>
         public void RunApplication()
         {
-            _window.WindowConfiguration();
-            _userInterface.ShowGreetingMessage();
+            int currentWindowWidth = _window.WindowConfiguration();
 
-            bool exitGame = false;
 
-            while (!exitGame)
+            if (currentWindowWidth >= 220)
             {
-                string response = _userInterface.GetResponseFromMenu();
+                _userInterface.ShowGreetingMessage();
 
-                switch (response)
+                bool exitGame = false;
+
+                while (!exitGame)
                 {
-                    case StringsDictionary.ExitCommandNumber:
-                    case StringsDictionary.ExitCommandText:
-                        exitGame = true;
-                        break;
-                    case StringsDictionary.CreateThousandGamesText:
-                    case StringsDictionary.CreateThousandGamesNumber:
-                        CreateThousandGames();
-                        _window.ClearConsole();
-                        RunGame();
-                        break;
-                    case StringsDictionary.SelectGamesText:
-                    case StringsDictionary.SelectGamesNumber:
-                        if (_thousandGames == null)
-                        {
-                            _userInterface.ShowMessage(StringsDictionary.OnSelectWithoutAnyGamesMessage);
-                            _userInterface.DrawSeparator(20);
-                            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-                            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                            Console.ReadKey();
-                            continue;
+                    string response = _userInterface.GetResponseFromMenu();
 
-                        }
-                        SelectGames();
-                        _window.ClearConsole();
-                        RunGame();
-                        break;
-                    case StringsDictionary.SaveGameCommandNumber:
-                    case StringsDictionary.SaveGameCommandText:
-                        if (_thousandGames == null)
-                        {
-                            _userInterface.ShowMessage(StringsDictionary.OnSaveWithoutAnyGamesMessage);
-                            _userInterface.DrawSeparator(20);
-                            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-                            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                            Console.ReadKey();
-                            continue;
-                        }
-                        SaveGame();
-                        _userInterface.ShowMessage(StringsDictionary.OnSaveGamesSuccessfulyMessage);
-                        _userInterface.DrawSeparator(20);
-                        _userInterface.ShowMessage(StringsDictionary.EmptyString);
-                        _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                        Console.ReadKey();
-                        break;
-                    case StringsDictionary.LoadGameCommandNumber:
-                    case StringsDictionary.LoadGameCommandText:
-                        LoadGame();
-                        if (_thousandGames == null)
-                        {
-                            _userInterface.ShowMessage(StringsDictionary.DirectoryNotExistError);
-                            _userInterface.DrawSeparator(20);
-                            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-                            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                            Console.ReadKey();
-                            continue;
-                        }
-                        _window.ClearConsole();
-                        RunGame();
-                        break;
-                    case StringsDictionary.ShowHideCursorCommandNumber:
-                        _window.ShowHideCursor();
-                        break;
-                    case StringsDictionary.HelpCommandSign:
-                    case StringsDictionary.HelpCommandText:
-                        _userInterface.GetHelpCommands();
-                        _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                        Console.ReadKey();
-                        break;
-                    default:
-                        _userInterface.ShowMessage(StringsDictionary.UnknownCommandMessage);
-                        _userInterface.DrawSeparator(100);
-                        _userInterface.ShowMessage(StringsDictionary.EmptyString);
-                        _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-                        Console.ReadKey();
-                        break;
+                    switch (response)
+                    {
+                        case ConstantsRepository.ExitCommandNumber:
+                        case ConstantsRepository.ExitCommandText:
+                            exitGame = true;
+                            break;
+                        case ConstantsRepository.CreateNewGamesText:
+                        case ConstantsRepository.CreateNewGamesNumber:
+                            CreateGames();
+                            _window.ClearConsole();
+                            RunGame();
+                            break;
+                        case ConstantsRepository.SelectGamesText:
+                        case ConstantsRepository.SelectGamesNumber:
+                            if (_games == null)
+                            {
+                                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSelectWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
+                                continue;
+
+                            }
+                            SelectGames();
+                            _window.ClearConsole();
+                            RunGame();
+                            break;
+                        case ConstantsRepository.SaveGameCommandNumber:
+                        case ConstantsRepository.SaveGameCommandText:
+                            if (_games == null)
+                            {
+                                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
+                                continue;
+                            }
+                            _fileManager.SaveGame(_games);
+                            _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveGamesSuccessfulyMessage, ConstantsRepository.LowSeparator);
+                            break;
+                        case ConstantsRepository.LoadGameCommandNumber:
+                        case ConstantsRepository.LoadGameCommandText:
+                            _games = _fileManager.LoadGame<GameEngine[]>();
+                            if (_games == null)
+                            {
+                                _userInterface.ShowDetailsMessage(ConstantsRepository.LoadingFromFileError, ConstantsRepository.LowSeparator);
+                                continue;
+                            }
+                            _window.ClearConsole();
+                            RunGame();
+                            break;
+                        case ConstantsRepository.ShowHideCursorCommandNumber:
+                            _window.ShowHideCursor();
+                            break;
+                        case ConstantsRepository.HelpCommandSign:
+                        case ConstantsRepository.HelpCommandText:
+                            _userInterface.GetHelpCommands();
+                            _userInterface.PressAnyKeyMessage();
+                            break;
+                        default:
+                            _userInterface.ShowDetailsMessage(ConstantsRepository.UnknownCommandMessage, ConstantsRepository.BigSeparator);
+                            break;
+                    }
+                    Thread.Sleep(ConstantsRepository.ThreadSleep);
                 }
-                Thread.Sleep(1000);
+            } 
+            else
+            {
+                _userInterface.ShowMessage(ConstantsRepository.ResolutionError);
+                _userInterface.PressAnyKeyMessage();
             }
         }
                      
         /// <summary>
-        /// Method runs the game every second,
-        /// while user press Q or Escape button.
+        /// Method runs the game every second, while user press Q or Escape button.
         /// </summary>
         private void RunGame()
         {
             bool isGameOnGoing = true;
             while (isGameOnGoing)
             {
-                RunThousandGames();
+                RunAllGames();
                 
-                Thread.Sleep(1000);
+                Thread.Sleep(ConstantsRepository.ThreadSleep);
                 ConsoleKey? consoleKey = _userInterface.GetInputKey();
                 isGameOnGoing = (consoleKey != ConsoleKey.Q && consoleKey != ConsoleKey.Escape);
             }
-            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-            Console.ReadKey();
+            _userInterface.ShowMessage(ConstantsRepository.EmptyString);
+            _userInterface.PressAnyKeyMessage();
         }
 
         /// <summary>
-        /// Method creates 1000 games.
+        /// Method creates games.
         /// </summary>
-        private void CreateThousandGames()
+        private void CreateGames()
         {
-            _thousandGames = new GameEngine[1000];
-            for (int currentGame = 0; currentGame < _thousandGames.Length; currentGame++)
+            _games = new GameEngine[ConstantsRepository.GamesCount];
+            for (int currentGame = 0; currentGame < _games.Length; currentGame++)
             {
-                GameEngine newGame = new GameEngine(25, 55);
+                GameEngine newGame = new GameEngine(ConstantsRepository.RowsCount, ConstantsRepository.ColumnsCount);
                 newGame.InitializeData();
-                _thousandGames[currentGame] = newGame;
+                _games[currentGame] = newGame;
             }
         }
 
         /// <summary>
-        /// Method runs all 1000 games at once.
-        /// If 8 games were choose, then shows them and their statistic.
-        /// Otherwise shows statistic only for 1000 games in total.  
+        /// Method runs all games at once.
+        /// If games were choose, then shows them and their statistic.
+        /// Otherwise shows statistic only for all games in total.  
         /// </summary>
-        private void RunThousandGames()
+        private void RunAllGames()
         {
-            _window.SetTitle(StringsDictionary.CreateGamesTitle);
-            ShowHeader();
-            ShowGamesStatistic(_thousandGames, 4);
+            _window.SetTitle(ConstantsRepository.CreateGamesTitle);
+            _userInterface.ShowHeader();
+            ShowGamesStatistic(_games, 4);
             
             if (_gamesOnScreen != null)
             {
-                _window.SetTitle(StringsDictionary.SelectedGamesTitle);
+                _window.SetTitle(ConstantsRepository.SelectedGamesTitle);
                 ShowGamesStatistic(_gamesOnScreen, 5);
                 _window.SetCursorPosition(0, 7);
-                _userInterface.ShowMessage(StringsDictionary.SelectedGamesMessage, false);
+                _userInterface.ShowMessage(ConstantsRepository.SelectedGamesMessage, false);
                 ShowSelectedGames();
 
                 _window.SetCursorPosition(0, 8);
-                _userInterface.DrawSeparator(200);
+                _userInterface.DrawSeparator(ConstantsRepository.HugeSeparator);
 
                 for (int currentGame = 0; currentGame < _gamesOnScreen.Length; currentGame++)
                 {
@@ -189,58 +175,39 @@ namespace UI
                 }
             }
             
-            for (int currentGame = 0; currentGame < _thousandGames.Length; currentGame++)
+            for (int currentGame = 0; currentGame < _games.Length; currentGame++)
             {
-                _thousandGames[currentGame].NextGeneration();
+                _games[currentGame].NextGeneration();
             }
         }
 
         /// <summary>
-        /// Method asks user to select 8 games to show.
+        /// Method asks user to select games to show.
         /// </summary>
         private void SelectGames()
         {
-            _gamesOnScreen = new GameEngine[8];
-            _selectedGamesNumbers = new int[8];
+            _gamesOnScreen = new GameEngine[ConstantsRepository.GamesOnScreen];
+            _selectedGamesNumbers = new int[ConstantsRepository.GamesOnScreen];
 
             for (int currentGame = 0; currentGame < _gamesOnScreen.Length; currentGame++)
             {
-                int selectedGame = _userInterface.GetLimitedValue($"{currentGame + 1}.{StringsDictionary.SelectGamesMessage}", 0, 999);
-                _gamesOnScreen[currentGame] = _thousandGames[selectedGame];
+                int selectedGame = _userInterface.GetLimitedValue($"{currentGame + 1}.{ConstantsRepository.SelectGamesMessage}", 0, 999);
+                _gamesOnScreen[currentGame] = _games[selectedGame];
                 _selectedGamesNumbers[currentGame] = selectedGame;
             }
 
-            _userInterface.DrawSeparator(50);
-            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-            _userInterface.ShowMessage(StringsDictionary.SelectedGamesMessage, false);
+            _userInterface.DrawSeparator(ConstantsRepository.MediumSeparator);
+            _userInterface.ShowMessage(ConstantsRepository.EmptyString);
+            _userInterface.ShowMessage(ConstantsRepository.SelectedGamesMessage, false);
 
             ShowSelectedGames();
 
-            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-            _userInterface.DrawSeparator(50);
-            _userInterface.ShowMessage(StringsDictionary.EmptyString);
-            _userInterface.ShowMessage(StringsDictionary.PressAnyKeyMessage);
-            Console.ReadKey();
+            _userInterface.ShowMessage(ConstantsRepository.EmptyString);
+            _userInterface.DrawSeparator(ConstantsRepository.MediumSeparator);
+            _userInterface.ShowMessage(ConstantsRepository.EmptyString);
+            _userInterface.PressAnyKeyMessage();
         }
-        
-        /// <summary>
-        /// Method shows header.
-        /// </summary>
-        private void ShowHeader()
-        {
-            _window.SetCursorPosition(0, 0);
-            _userInterface.DrawSeparator(60);
-
-            _window.SetCursorPosition(0, 1);
-            _userInterface.ShowMessage(StringsDictionary.PressToReturnMessage);
-
-            _window.SetCursorPosition(0, 2);
-            _userInterface.DrawSeparator(60);
-
-            _window.SetCursorPosition(0, 3);
-            _userInterface.ShowMessage(StringsDictionary.LiveStatisticMessage);
-        }
-
+      
         /// <summary>
         /// Method shows what exact games on the screen. 
         /// </summary>
@@ -248,7 +215,7 @@ namespace UI
         {
             for (int currentGameNumber = 0; currentGameNumber < _selectedGamesNumbers.Length; currentGameNumber++)
             {
-                string cutLastChar = currentGameNumber < _selectedGamesNumbers.Length - 1 ? StringsDictionary.Comma : StringsDictionary.Space;
+                string cutLastChar = currentGameNumber < _selectedGamesNumbers.Length - 1 ? ConstantsRepository.Comma : ConstantsRepository.Space;
                 _userInterface.ShowMessage($"{_selectedGamesNumbers[currentGameNumber]}{cutLastChar}", false);
             }
         }
@@ -264,7 +231,7 @@ namespace UI
             int totalCountAliveCells = 0;
             for (int currentGame = 0; currentGame < games.Length; currentGame++)
             {
-                if (_thousandGames[currentGame].CountAliveCells() == 0)
+                if (_games[currentGame].CountAliveCells() == 0)
                 {
                     countOfAliveGames--;
                 }
@@ -273,35 +240,6 @@ namespace UI
             _window.SetCursorPosition(0, offsetY);
             _userInterface.ShowMessage($"Total games alive of {games.Length} games: {countOfAliveGames}, ", false);
             _userInterface.ShowMessage($"Total cells alive of {games.Length} games: {totalCountAliveCells}. ");
-        }
-
-        /// <summary>
-        /// Method for saving games into file.
-        /// </summary>
-        private void SaveGame()
-        {
-            _fileController.WriteToBinaryFile<GameEngine[]>(BuildPath(StringsDictionary.SavingLoadingFilesDirectory), _thousandGames);
-        }
-
-        /// <summary>
-        /// Method for loading games from file 
-        /// into /games directory.
-        /// </summary>
-        private void LoadGame()
-        {
-            _thousandGames = _fileController.ReadFromBinaryFile<GameEngine[]>(BuildPath(StringsDictionary.SavingLoadingFilesDirectory));
-        }
-
-        /// <summary>
-        /// Method builds path to save, or load data.
-        /// </summary>
-        /// <param name="directory">Directory name.</param>
-        /// <returns>Built path.</returns>
-        private string BuildPath(string directory = StringsDictionary.EmptyString)
-        {
-            string savingLoadingDirectory = string.IsNullOrEmpty(directory) ? string.Empty : directory;
-
-            return $"{AppDomain.CurrentDomain.BaseDirectory}{savingLoadingDirectory}{StringsDictionary.SavingLoadingFileName}";
         }
     }
 }
