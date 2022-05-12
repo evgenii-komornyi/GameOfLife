@@ -69,8 +69,7 @@
         }
 
         /// <summary>
-        /// Method calculates the count
-        /// of alive cells.
+        /// Method calculates the count of alive cells.
         /// </summary>
         /// <returns>Alive cells count.</returns>
         public int CountAliveCells()
@@ -81,7 +80,7 @@
             {
                 for (int currentRow = 0; currentRow < GameField.GetLength(1); currentRow++)
                 {
-                    aliveCells += GameField[currentColumn, currentRow] ? 1 : 0;                           
+                    aliveCells += GameField[currentColumn, currentRow] ? 1 : 0;
                 }
             }
 

@@ -1,10 +1,5 @@
-﻿using Files;
-using GameOfLifeEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GameOfLifeEngine;
+using Repository;
 
 namespace UI
 {
@@ -23,11 +18,11 @@ namespace UI
         /// <returns>User prompt.</returns>
         public string GetResponseFromMenu()
         {
-            _window.SetTitle(StringsDictionary.GameTitle);
+            _window.SetTitle(ConstantsRepository.GameTitle);
             _window.ClearConsole();
             ReadMainMenuCommands();
                       
-            ShowMessage(StringsDictionary.TypeCommand, false);
+            ShowMessage(ConstantsRepository.TypeCommand, false);
 
             return Console.ReadLine();
         }
@@ -40,23 +35,23 @@ namespace UI
         {
             for (int currentRow = 0; currentRow < field.GameField.GetLength(1); currentRow++)
             {
-                _window.SetCursorPosition(offsetX, offsetY + currentRow + 10);
+                _window.SetCursorPosition(offsetX, offsetY + currentRow + ConstantsRepository.OffsetY);
                 var aliveDeadSymbols = new char[field.GameField.GetLength(0)];
 
                 for (int currentColumn = 0; currentColumn < field.GameField.GetLength(0); currentColumn++)
                 {
                     if (field.GameField[currentColumn, currentRow])
                     {
-                        aliveDeadSymbols[currentColumn] = StringsDictionary.AliveCellSymbol;
+                        aliveDeadSymbols[currentColumn] = ConstantsRepository.AliveCellSymbol;
                     }
                     else
                     {
-                        aliveDeadSymbols[currentColumn] = StringsDictionary.DeadCellSymbol;
+                        aliveDeadSymbols[currentColumn] = ConstantsRepository.DeadCellSymbol;
                     }
                 }
                 
                 Console.Write(aliveDeadSymbols);
-                _window.SetCursorPosition(offsetX, offsetY + currentRow + 10);
+                _window.SetCursorPosition(offsetX, offsetY + currentRow + ConstantsRepository.OffsetY);
             }
         }
 
@@ -92,7 +87,7 @@ namespace UI
         {
             for (int currentTime = 0; currentTime < countSeparator; currentTime++)
             {
-                ShowMessage(StringsDictionary.Separator, false);
+                ShowMessage(ConstantsRepository.Separator, false);
             }
         }
 
@@ -130,13 +125,52 @@ namespace UI
         /// </summary>
         public void ShowGreetingMessage()
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.SourceDirectory + StringsDictionary.GreatingFileName;
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + ConstantsRepository.SourceDirectory + ConstantsRepository.GreatingFileName;
 
             var fileContent = File.ReadAllText(filePath);
 
             ShowMessage(fileContent);
 
-            ShowMessage(StringsDictionary.PressAnyKeyMessage);
+            PressAnyKeyMessage();
+        }
+
+        /// <summary>
+        /// Method shows header.
+        /// </summary>
+        public void ShowHeader()
+        {
+            _window.SetCursorPosition(0, 0);
+            DrawSeparator(ConstantsRepository.MediumSeparator);
+
+            _window.SetCursorPosition(0, 1);
+            ShowMessage(ConstantsRepository.PressToReturnMessage);
+
+            _window.SetCursorPosition(0, 2);
+            DrawSeparator(ConstantsRepository.MediumSeparator);
+
+            _window.SetCursorPosition(0, 3);
+            ShowMessage(ConstantsRepository.LiveStatisticMessage);
+        }
+
+        /// <summary>
+        /// Method shows detail message for user.
+        /// </summary>
+        /// <param name="detailMessage">Detail message.</param>
+        /// <param name="countSeparator">Count of separators.</param>
+        public void ShowDetailsMessage(string detailMessage, int countSeparator)
+        {
+            ShowMessage(detailMessage);
+            DrawSeparator(countSeparator);
+            ShowMessage(ConstantsRepository.EmptyString);
+            PressAnyKeyMessage();
+        }
+
+        /// <summary>
+        /// Method shows message to press any key and wait this key from user.
+        /// </summary>
+        public void PressAnyKeyMessage()
+        {
+            ShowMessage(ConstantsRepository.PressAnyKeyMessage);
             Console.ReadKey();
         }
 
@@ -145,7 +179,7 @@ namespace UI
         /// </summary>
         private void ReadMainMenuCommands()
         {
-            string filePath = AppDomain.CurrentDomain.BaseDirectory + StringsDictionary.SourceDirectory + StringsDictionary.MainMenuCommandsFileName;
+            string filePath = AppDomain.CurrentDomain.BaseDirectory + ConstantsRepository.SourceDirectory + ConstantsRepository.MainMenuCommandsFileName;
 
             var fileContent = File.ReadAllText(filePath);
 
@@ -157,12 +191,12 @@ namespace UI
         /// </summary>
         public void GetHelpCommands()
         {
-            ShowMessage(StringsDictionary.ExitHelpDescription);
-            ShowMessage(StringsDictionary.CreateThousandGamesHelpDesctiption);
-            ShowMessage(StringsDictionary.SelectGamesHelpDesctiption);
-            ShowMessage(StringsDictionary.SaveGameHelpDescription);
-            ShowMessage(StringsDictionary.LoadGameHelpDesctiption);
-            ShowMessage(StringsDictionary.ShowHideCursorHelpDesctiption);
+            ShowMessage(ConstantsRepository.ExitHelpDescription);
+            ShowMessage(ConstantsRepository.CreateThousandGamesHelpDesctiption);
+            ShowMessage(ConstantsRepository.SelectGamesHelpDesctiption);
+            ShowMessage(ConstantsRepository.SaveGameHelpDescription);
+            ShowMessage(ConstantsRepository.LoadGameHelpDesctiption);
+            ShowMessage(ConstantsRepository.ShowHideCursorHelpDesctiption);
         }
 
         /// <summary>
@@ -183,8 +217,8 @@ namespace UI
                 }
                 else
                 {
-                    ShowMessage(StringsDictionary.NotANumberError);
-                    ShowMessage(StringsDictionary.PressAnyKeyMessage);
+                    ShowMessage(ConstantsRepository.NotANumberError);
+                    ShowMessage(ConstantsRepository.PressAnyKeyMessage);
                     Console.ReadKey();
                 }
             }
@@ -205,8 +239,8 @@ namespace UI
 
                 if (value < minValue || value > maxValue)
                 {
-                    ShowMessage(StringsDictionary.InputOutOfRangeError);
-                    ShowMessage(StringsDictionary.PressAnyKeyMessage);
+                    ShowMessage(ConstantsRepository.InputOutOfRangeError);
+                    ShowMessage(ConstantsRepository.PressAnyKeyMessage);
                     Console.ReadKey();
                 }
                 else
