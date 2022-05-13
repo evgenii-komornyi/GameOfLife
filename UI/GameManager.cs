@@ -31,7 +31,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method starts the application.
+        /// Starts the application.
         /// </summary>
         public void RunApplication()
         {
@@ -57,41 +57,19 @@ namespace UI
                         case ConstantsRepository.CreateNewGamesText:
                         case ConstantsRepository.CreateNewGamesNumber:
                             CreateGames();
-                            _window.ClearConsole();
-                            RunGame();
+                            ProcessRunGame();
                             break;
                         case ConstantsRepository.SelectGamesText:
                         case ConstantsRepository.SelectGamesNumber:
-                            if (_games == null)
-                            {
-                                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSelectWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
-                                continue;
-
-                            }
-                            SelectGames();
-                            _window.ClearConsole();
-                            RunGame();
+                            ProcessGameSelection();
                             break;
                         case ConstantsRepository.SaveGameCommandNumber:
                         case ConstantsRepository.SaveGameCommandText:
-                            if (_games == null)
-                            {
-                                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
-                                continue;
-                            }
-                            _fileManager.SaveGame(_games);
-                            _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveGamesSuccessfulyMessage, ConstantsRepository.LowSeparator);
+                            ProcessGameSave();
                             break;
                         case ConstantsRepository.LoadGameCommandNumber:
                         case ConstantsRepository.LoadGameCommandText:
-                            _games = _fileManager.LoadGame<GameEngine[]>();
-                            if (_games == null)
-                            {
-                                _userInterface.ShowDetailsMessage(ConstantsRepository.LoadingFromFileError, ConstantsRepository.LowSeparator);
-                                continue;
-                            }
-                            _window.ClearConsole();
-                            RunGame();
+                            ProcessGameLoad();
                             break;
                         case ConstantsRepository.ShowHideCursorCommandNumber:
                             _window.ShowHideCursor();
@@ -116,7 +94,7 @@ namespace UI
         }
                      
         /// <summary>
-        /// Method runs the game every second, while user press Q or Escape button.
+        /// Runs the game every second, while user press Q or Escape button.
         /// </summary>
         private void RunGame()
         {
@@ -134,7 +112,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method creates games.
+        /// Creates games.
         /// </summary>
         private void CreateGames()
         {
@@ -148,7 +126,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method runs all games at once.
+        /// Runs all games at once.
         /// If games were choose, then shows them and their statistic.
         /// Otherwise shows statistic only for all games in total.  
         /// </summary>
@@ -182,7 +160,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method asks user to select games to show.
+        /// Asks user to select games to show.
         /// </summary>
         private void SelectGames()
         {
@@ -207,9 +185,60 @@ namespace UI
             _userInterface.ShowMessage(ConstantsRepository.EmptyString);
             _userInterface.PressAnyKeyMessage();
         }
+
+        /// <summary>
+        /// Checks and runs games.
+        /// </summary>
+        private void ProcessGameSelection()
+        {
+            if (_games == null)
+            {
+                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSelectWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
+                return;
+            }
+            SelectGames();
+            ProcessRunGame();
+        }
+
+        /// <summary>
+        /// Loads and runs game.
+        /// </summary>
+        private void ProcessGameLoad()
+        {
+            _games = _fileManager.LoadGame<GameEngine[]>();
+            if (_games == null)
+            {
+                _userInterface.ShowDetailsMessage(ConstantsRepository.LoadingFromFileError, ConstantsRepository.LowSeparator);
+                return;
+            }
+            ProcessRunGame();
+        }
+
+        /// <summary>
+        /// Saves and runs game.
+        /// </summary>
+        private void ProcessGameSave()
+        {
+            if (_games == null)
+            {
+                _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveWithoutAnyGamesMessage, ConstantsRepository.LowSeparator);
+                return;
+            }
+            _fileManager.SaveGame(_games);
+            _userInterface.ShowDetailsMessage(ConstantsRepository.OnSaveGamesSuccessfulyMessage, ConstantsRepository.LowSeparator);
+        }
+
+        /// <summary>
+        /// Clears console window and runs game.
+        /// </summary>
+        private void ProcessRunGame()
+        {
+            _window.ClearConsole();
+            RunGame();
+        }
       
         /// <summary>
-        /// Method shows what exact games on the screen. 
+        /// Shows what exact games on the screen. 
         /// </summary>
         private void ShowSelectedGames()
         {
@@ -221,7 +250,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows statistic of the games.
+        /// Shows statistic of the games.
         /// </summary>
         /// <param name="games">Games, which needs statistic.</param>
         /// <param name="offsetY">Top offset.</param>

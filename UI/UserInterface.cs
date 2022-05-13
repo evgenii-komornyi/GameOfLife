@@ -13,7 +13,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method gets response in the main menu from user. 
+        /// Gets response in the main menu from user. 
         /// </summary>
         /// <returns>User prompt.</returns>
         public string GetResponseFromMenu()
@@ -28,7 +28,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method draws field and cells on the screen.
+        /// Draws field and cells on the screen.
         /// </summary>
         /// <param name="field">Game field.</param>
         public void DrawField(GameEngine field, int offsetX, int offsetY)
@@ -56,7 +56,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method draws several game's fields on the screen.
+        /// Draws several game's fields on the screen.
         /// </summary>
         /// <param name="fields">Game fields.</param>
         public void DrawMultiField(GameEngine[] fields)
@@ -80,7 +80,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method draws separator.
+        /// Draws separator.
         /// </summary>
         /// <param name="countSeparator">Count of the separators.</param>
         public void DrawSeparator(int countSeparator)
@@ -92,7 +92,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method gets input key. 
+        /// Gets input key. 
         /// </summary>
         /// <returns>Pressed button value.</returns>
         public ConsoleKey? GetInputKey()
@@ -105,7 +105,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows message to user.
+        /// Shows message to user.
         /// </summary>
         /// <param name="message">Message to show.</param>
         public void ShowMessage(string message, bool useWriteLine = true)
@@ -121,7 +121,7 @@ namespace UI
         }
         
         /// <summary>
-        /// Method reads file with ASCII game's name.
+        /// Reads file with ASCII game's name.
         /// </summary>
         public void ShowGreetingMessage()
         {
@@ -135,7 +135,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows header.
+        /// Shows header.
         /// </summary>
         public void ShowHeader()
         {
@@ -153,7 +153,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows detail message for user.
+        /// Shows detail message for user.
         /// </summary>
         /// <param name="detailMessage">Detail message.</param>
         /// <param name="countSeparator">Count of separators.</param>
@@ -166,7 +166,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows message to press any key and wait this key from user.
+        /// Shows message to press any key and wait this key from user.
         /// </summary>
         public void PressAnyKeyMessage()
         {
@@ -175,7 +175,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method reads file with main menu's commands.
+        /// Reads file with main menu's commands.
         /// </summary>
         private void ReadMainMenuCommands()
         {
@@ -187,7 +187,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method gets help information.
+        /// Gets help information.
         /// </summary>
         public void GetHelpCommands()
         {
@@ -200,7 +200,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method converts string value into numeric. 
+        /// Converts string value into numeric. 
         /// </summary>
         /// <param name="prompt">String value for asking user's input.</param>
         /// <returns>Converted numeric value.</returns>
@@ -225,7 +225,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method limits input value by minimum and maximum limites.   
+        /// Limits input value by minimum and maximum limites.   
         /// </summary>
         /// <param name="prompt">String value for asking user's input.</param>
         /// <param name="minValue">Minimal value.</param>

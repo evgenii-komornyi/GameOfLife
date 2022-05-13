@@ -23,7 +23,7 @@ namespace UI
         }
         
         /// <summary>
-        /// Method for saving games into file.
+        /// Saves games into file.
         /// </summary>
         public void SaveGame<T>(T objectToSave)
         {
@@ -31,7 +31,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method for loading games from file into /saves directory.
+        /// Loads games from file into /saves directory.
         /// </summary>
         public T LoadGame<T>()
         {
@@ -46,7 +46,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method builds path to save, or load data.
+        /// Builds path to save, or load data.
         /// </summary>
         /// <param name="directory">Directory name.</param>
         /// <returns>Built path.</returns>

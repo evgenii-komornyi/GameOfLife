@@ -21,7 +21,7 @@ namespace UI
         private static extern IntPtr GetConsoleWindow();
 
         /// <summary>
-        /// Method sets optimal window size.
+        /// Sets optimal window size.
         /// </summary>
         public int WindowConfiguration()
         {
@@ -42,7 +42,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method shows/hides blinking console's cursor.
+        /// Shows/hides blinking console's cursor.
         /// </summary>
         public void ShowHideCursor()
         {
@@ -51,7 +51,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method clears console window.
+        /// Clears console window.
         /// </summary>
         public void ClearConsole()
         {
@@ -59,7 +59,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method sets console window's title.
+        /// Sets console window's title.
         /// </summary>
         /// <param name="title">Title.</param>
         public void SetTitle(string title)
@@ -68,7 +68,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method sets beginning cursor's position. 
+        /// Sets beginning cursor's position. 
         /// </summary>
         /// <param name="left">Shift from left.</param>
         /// <param name="top">Shift from top.</param>
@@ -79,7 +79,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Method sets window's size.
+        /// Sets window's size.
         /// </summary>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
