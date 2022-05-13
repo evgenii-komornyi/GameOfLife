@@ -6,7 +6,7 @@
     public class FileController
     {
         /// <summary>
-        /// Method saves data to binary file.
+        /// Saves data to binary file.
         /// </summary>
         /// <typeparam name="T">Type of saving object.</typeparam>
         /// <param name="filePath">Path to file.</param>
@@ -22,7 +22,7 @@
         }
 
         /// <summary>
-        /// Method creates the directory to saving games if it does not exist.
+        /// Creates the directory to saving games if it does not exist.
         /// </summary>
         /// <param name="filePath">Path to file.</param>
         private void CreateDirectoryIfNotExist(string filePath)
@@ -34,14 +34,14 @@
         }
 
         /// <summary>
-        /// Method loads data from binary file.
+        /// Loads data from binary file.
         /// </summary>
         /// <typeparam name="T">Type of loading object.</typeparam>
         /// <param name="filePath">Path to file.</param>
         /// <returns>Loading object.</returns>
         public T ReadFromBinaryFile<T>(string filePath)
         {
-            if (!IsDirectoryExist(filePath))
+            if (!IsDirectoryExist(filePath) || !File.Exists(filePath))
             {
                 return default(T);
             }
@@ -54,7 +54,7 @@
         }
 
         /// <summary>
-        /// Method checks if directory does exist.
+        /// Checks if directory does exist.
         /// </summary>
         /// <param name="filePath">Path to file</param>
         /// <returns>Directory does/does not exist</returns>

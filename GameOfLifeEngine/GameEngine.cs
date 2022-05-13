@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// Method initializes game data.
+        /// Initializes game data.
         /// </summary>
         public void InitializeData()
         {
@@ -40,7 +40,7 @@
         }
 
         /// <summary>
-        /// Method calculates how many neighbors are near current cell.
+        /// Calculates how many neighbors are near current cell.
         /// </summary>
         /// <param name="currentColumn">Current column number.</param>
         /// <param name="currentRow">Current row number.</param>
@@ -69,8 +69,7 @@
         }
 
         /// <summary>
-        /// Method calculates the count
-        /// of alive cells.
+        /// Calculates the count of alive cells.
         /// </summary>
         /// <returns>Alive cells count.</returns>
         public int CountAliveCells()
@@ -89,7 +88,7 @@
         }
 
         /// <summary>
-        /// Method calculates next generation of the cells.
+        /// Calculates next generation of the cells.
         /// </summary>
         public void NextGeneration()
         {
