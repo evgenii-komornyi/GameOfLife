@@ -1,12 +1,6 @@
 ﻿using Files;
-using GameOfLifeEngine;
 using Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UI
 {
@@ -15,11 +9,11 @@ namespace UI
     /// </summary>
     public class FileManager
     {
-        private FileController _fileController;
+        private FileService _fileService;
 
-        public FileManager(FileController fileController)
+        public FileManager(FileService fileController)
         {
-            this._fileController = fileController;
+            this._fileService = fileController;
         }
         
         /// <summary>
@@ -27,7 +21,7 @@ namespace UI
         /// </summary>
         public void SaveGame<T>(T objectToSave)
         {
-            _fileController.WriteToBinaryFile(BuildPath(ConstantsRepository.SavingLoadingFilesDirectory), objectToSave);
+            _fileService.WriteToBinaryFile(BuildPath(ConstantsRepository.SavingLoadingFilesDirectory), objectToSave);
         }
 
         /// <summary>
@@ -37,7 +31,7 @@ namespace UI
         {
             try
             {
-                return _fileController.ReadFromBinaryFile<T>(BuildPath(ConstantsRepository.SavingLoadingFilesDirectory));
+                return _fileService.ReadFromBinaryFile<T>(BuildPath(ConstantsRepository.SavingLoadingFilesDirectory));
             } 
             catch (SerializationException ex)
             {
