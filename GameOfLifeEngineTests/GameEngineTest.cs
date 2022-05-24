@@ -26,7 +26,7 @@ namespace GameOfLifeEngineTests
         }
 
         [Fact]
-        public void FillArray_CheckAliveCells_ReturnsZero()
+        public void CountAliveCells_GameFieldWithOnlyDeadCells_ReturnsZero()
         {
             FillArrayWithAllDeadCells();
 
@@ -38,7 +38,7 @@ namespace GameOfLifeEngineTests
         }
 
         [Fact]
-        public void CreatePattern_CheckAliveCells_ReturnsThree()
+        public void CountAliveCells_GameFieldWithBlinkerPattern_ReturnsThree()
         {
             CreateBlinkerPattern();
 
@@ -50,7 +50,7 @@ namespace GameOfLifeEngineTests
         }
 
         [Fact]
-        public void CreatePattern_CheckNextGeneration_ReturnsNewArrayWithNextGeneration()
+        public void NextGeneration_GameFieldWithBlinkerPattern_ReturnsNewArrayWithNextGeneration()
         {
             CreateBlinkerPattern();
             _gameEngine.NextGeneration();
