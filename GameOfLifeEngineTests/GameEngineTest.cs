@@ -7,10 +7,7 @@ namespace GameOfLifeEngineTests
     {
         private const int RowsCount = 5;
         private const int ColumnsCount = 5;
-        private const int ExpectedLength = 25;
-        private const int LifelessField = 0;
-        private const int LifeField = 3;
-
+               
         private GameEngine _gameEngine;
 
         public GameEngineTest()
@@ -19,44 +16,50 @@ namespace GameOfLifeEngineTests
         }
 
         [Fact]
-        public void CheckLengthOfArrayOnCreate()
+        public void CreateArray_CheckLengthOfArray_ReturnsTwentyFive()
         {
             var actual = _gameEngine.GameField.Length;
+
+            const int ExpectedLength = 25;
 
             Assert.Equal(ExpectedLength, actual);
         }
 
         [Fact]
-        public void CheckAliveCells_ReturnsZero()
+        public void FillArray_CheckAliveCells_ReturnsZero()
         {
             FillArrayWithAllDeadCells();
 
             var actual = _gameEngine.CountAliveCells();
 
-            Assert.Equal(LifelessField, actual);
+            const int ExpectedLifelessFieldCellCount = 0;
+
+            Assert.Equal(ExpectedLifelessFieldCellCount, actual);
         }
 
         [Fact]
-        public void CheckAliveCells_ReturnsThree()
+        public void CreatePattern_CheckAliveCells_ReturnsThree()
         {
             CreateBlinkerPattern();
 
             var actual = _gameEngine.CountAliveCells();
 
-            Assert.Equal(LifeField, actual);
+            const int ExpectedLifeFieldCellCount = 3;
+
+            Assert.Equal(ExpectedLifeFieldCellCount, actual);
         }
 
         [Fact]
-        public void CheckNextGeneration_ReturnsNewArrayWithNextGeneration()
+        public void CreatePattern_CheckNextGeneration_ReturnsNewArrayWithNextGeneration()
         {
             CreateBlinkerPattern();
             _gameEngine.NextGeneration();
 
             var actual = _gameEngine.GameField;
             
-            var nextGeneration = NextBlinker();
+            var expectedNextGeneration = NextBlinker();
 
-            Assert.Equal(nextGeneration, actual);
+            Assert.Equal(expectedNextGeneration, actual);
         }
 
         private void FillArrayWithAllDeadCells()
