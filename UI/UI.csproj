@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ConstantsRepository\ConstantsRepository.csproj" />
-    <ProjectReference Include="..\FileController\FileController.csproj" />
+    <ProjectReference Include="..\FileController\FileService.csproj" />
     <ProjectReference Include="..\GameOfLifeEngine\GameOfLifeEngine.csproj" />
   </ItemGroup>
 

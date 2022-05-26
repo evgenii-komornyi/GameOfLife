@@ -3,7 +3,7 @@
     /// <summary>
     /// Class to saving and loading games' file.
     /// </summary>
-    public class FileController
+    public class FileService : IFileService
     {
         /// <summary>
         /// Saves data to binary file.

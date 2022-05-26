@@ -25,9 +25,9 @@
         }
 
         /// <summary>
-        /// Initializes game data.
+        /// Initializes random game data.
         /// </summary>
-        public void InitializeData()
+        public void InitializeRandomData()
         {
             Random random = new Random();
             for (int currentColumn = 0; currentColumn < GameField.GetLength(0); currentColumn++)

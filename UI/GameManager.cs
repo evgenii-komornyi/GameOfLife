@@ -120,7 +120,7 @@ namespace UI
             for (int currentGame = 0; currentGame < _games.Length; currentGame++)
             {
                 GameEngine newGame = new GameEngine(ConstantsRepository.RowsCount, ConstantsRepository.ColumnsCount);
-                newGame.InitializeData();
+                newGame.InitializeRandomData();
                 _games[currentGame] = newGame;
             }
         }
