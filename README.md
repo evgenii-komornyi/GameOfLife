@@ -8,3 +8,9 @@
 - [x] Create Console application – none special UI;
 - [x] Simple navigation menu expected for select size of field;
 - [x] Game field needs to be updated by iteration each second;
+
+### Iteration 2 Requirements:
+
+- [x] Add information to represent count of iteration and count of live cells;
+- [x] Add possibility to save information to file and restore it on application start;
+- [x] Possibility to stop application in any moment;
