@@ -21,3 +21,6 @@
 - [x] Possibility to change what exact games will be iterating on screen;
 - [x] Possibility to save all games at once;
 - [x] Present real- time statistic how many live games and how many live cells we have in total;
+
+### Tests: 
+- [x] Unit tests;
